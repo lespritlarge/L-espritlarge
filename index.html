@@ -713,12 +713,12 @@
 
   <div class="filter-tags">
     <button class="tag active" onclick="setFilter('Tous', this)">Tous</button>
-    <button class="tag" onclick="setFilter('Roman', this)">Roman</button>
-    <button class="tag" onclick="setFilter('Essai', this)">Essai</button>
-    <button class="tag" onclick="setFilter('Poésie', this)">Poésie</button>
-    <button class="tag" onclick="setFilter('BD', this)">BD</button>
+    <button class="tag" onclick="setFilter('Littérature française', this)">Lit. française</button>
+    <button class="tag" onclick="setFilter('Littérature étrangère', this)">Lit. étrangère</button>
     <button class="tag" onclick="setFilter('Jeunesse', this)">Jeunesse</button>
-    <button class="tag" onclick="setFilter('Voyage', this)">Voyage</button>
+    <button class="tag" onclick="setFilter('Bande-dessinée', this)">BD</button>
+    <button class="tag" onclick="setFilter('Essai', this)">Essai</button>
+  
   </div>
 
   <div class="book-grid" id="bookGrid"></div>
@@ -1111,7 +1111,6 @@ function renderCoups() {
       <div>
         <div class="book-title" style="font-size:1.05rem;">${b.title}</div>
         <div class="book-author">${b.author}</div>
-        <p class="coup-quote">${b.favQuote}</p>
         <button class="btn-reserve available" style="width:auto;padding:.5rem 1.2rem;" onclick="openReserve(${b.id})">Réserver ce livre</button>
       </div>
     </div>
