@@ -1,27 +1,50 @@
 {
-  "mis_a_jour": "2026-03-11T00:00:00",
+  "mis_a_jour": "2026-03-11T16:12:20.481Z",
   "libraires": [
     {
-      "prenom": "Prénom",
-      "role": "Libraire · Co-fondateur·rice",
-      "bio": "Quelques lignes de présentation : parcours, ce qui vous a amené à ce métier, ce que vous aimez dans votre quotidien à la librairie…",
+      "prenom": "Nadine",
+      "role": "Libraire",
+      "bio": "Parler, échanger, découvrir pour «transmettre » une lecture, un roman, un album pour enfant.",
       "photo": "",
-      "citation": "Une phrase ou citation qui vous ressemble.",
-      "genres": ["Littérature française", "Essais", "Poésie"]
+      "citation": "Quand je pense à tous les livres qu'il me reste à lire, j'ai la certitude d'être encore heureux.",
+      "genres": [
+        "Littérature française",
+        "Littérature jeunesse"
+      ]
     },
     {
-      "prenom": "Prénom",
+      "prenom": "Aurélien",
       "role": "Libraire",
-      "bio": "Quelques lignes de présentation : parcours, ce qui vous a amené à ce métier, ce que vous aimez dans votre quotidien à la librairie…",
+      "bio": "Néo-libraire qui est tombé dedans quand il était petit. Comédien improvisateur. Ex-Architecte. Professeur de logiciel d'architecture. Enseignant de théâtre. Jardinier. Peut aussi monter une étagère...",
       "photo": "",
-      "citation": "Une phrase ou citation qui vous ressemble.",
-      "genres": ["Jeunesse", "Littérature étrangère"]
+      "citation": "\"Il y a des gens qui ont besoin de faire, moi, j'ai juste besoin d'être\"",
+      "genres": [
+        "Bande-dessinée",
+        "Littérature étrangère",
+        "Imaginaire"
+      ]
     }
   ],
   "valeurs": [
-    { "icone": "📖", "titre": "Le conseil humain", "texte": "Pas d'algorithme ici. Chaque recommandation vient d'un libraire qui a lu, aimé (ou pas), et qui prend le temps de comprendre ce que vous cherchez — même quand vous ne le savez pas encore." },
-    { "icone": "🌍", "titre": "L'ouverture au monde", "texte": "Littératures traduites, voix peu entendues, regards différents… Nous croyons que les livres sont le meilleur moyen d'aller au-delà de sa propre expérience." },
-    { "icone": "🤝", "titre": "Ancrage local", "texte": "Librairie indépendante à Guérande depuis 2006, nous faisons partie de la vie de la presqu'île. Soutenir L'Esprit Large, c'est soutenir un commerce qui vous ressemble." },
-    { "icone": "🎉", "titre": "La librairie vivante", "texte": "Rencontres, lectures, casse-croûtes… nous aimons que la librairie soit un endroit où on revient, où on reste, où l'on se retrouve autour de ce qui nous lie : les histoires." }
+    {
+      "icone": "📖",
+      "titre": "Le conseil humain",
+      "texte": "Pas d'algorithme ici. Chaque recommandation vient d'un libraire qui a lu, aimé (ou pas), et qui prend le temps de comprendre ce que vous cherchez — même quand vous ne le savez pas encore."
+    },
+    {
+      "icone": "🌍",
+      "titre": "L'ouverture au monde",
+      "texte": "Littératures traduites, voix peu entendues, regards différents… Nous croyons que les livres sont le meilleur moyen d'aller au-delà de sa propre expérience."
+    },
+    {
+      "icone": "🤝",
+      "titre": "Ancrage local",
+      "texte": "Librairie indépendante à Guérande depuis 2006, nous faisons partie de la vie de la presqu'île. Soutenir L'Esprit Large, c'est soutenir un commerce qui vous ressemble."
+    },
+    {
+      "icone": "🎉",
+      "titre": "La librairie vivante",
+      "texte": "Rencontres, lectures, casse-croûtes… nous aimons que la librairie soit un endroit où on revient, où on reste, où l'on se retrouve autour de ce qui nous lie : les histoires."
+    }
   ]
 }
