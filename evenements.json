@@ -1,5 +1,5 @@
 {
-  "mis_a_jour": "2026-03-11T08:52:30.543Z",
+  "mis_a_jour": "2026-03-11T08:53:40.832Z",
   "evenements": [
     {
       "id": "1742601600000",
@@ -16,15 +16,15 @@
     },
     {
       "id": "1742774400000",
-      "titre": "Casse-croÃÂ»te LittÃÂ©raire",
+      "titre": "Casse-croûte Littéraire",
       "date": "2026-03-26",
-      "time": "12h30 Ã¢ÂÂ 14h00",
-      "type": "Ã°ÂÂ¥Âª Casse-croÃÂ»te LittÃÂ©raire",
+      "time": "12h30 à 14h00",
+      "type": "",
       "lieu": "Librairie L'Esprit Large",
-      "desc": "On mange ensemble, un jeudi midi par mois pour discuter et ÃÂ©changer autour de vos et nos lectures...",
+      "desc": "On mange ensemble, un jeudi midi par mois pour discuter et échanger autour de vos et nos lectures...",
       "affiche": "",
       "special": false,
-      "recurrent": false,
+      "recurrent": true,
       "fermeture": false
     },
     {
