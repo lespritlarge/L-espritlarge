@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog — Librairie L'Esprit Large</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,800;1,400;1,600&family=Lora:ital,wght@0,400;0,500;1,400&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cream: #f2f0ef; --warm-white: #f7f5f4;
+      --wood: #8b2e2e; --wood-dark: #5c1a1a; --wood-light: #b86060;
+      --amber: #9e3a3a; --amber-light: #c47070;
+      --ink: #1e1e1e; --ink-soft: #3a3a3a; --parchment: #ebe8e8;
+      --shadow: rgba(30,10,10,0.13);
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { font-family:'Lora',serif; background:var(--warm-white); color:var(--ink); }
+
+    /* NAV */
+    nav {
+      position:fixed; top:0; left:0; right:0; z-index:100;
+      background:rgba(242,240,239,0.97); backdrop-filter:blur(8px);
+      border-bottom:1px solid rgba(92,26,26,0.12);
+      padding:0 2rem; height:80px;
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    .nav-logo {
+      display:flex; align-items:center; gap:0.75rem; text-decoration:none;
+      font-family:'Playfair Display',serif; font-size:1.25rem;
+      font-weight:800; font-style:italic; color:var(--wood-dark);
+    }
+    .nav-logo img { width:64px; height:64px; object-fit:contain; }
+    .nav-logo span { color:var(--amber); }
+    .nav-back {
+      font-family:'Raleway',sans-serif; font-size:0.75rem; font-weight:600;
+      letter-spacing:0.08em; text-transform:uppercase;
+      color:var(--ink-soft); text-decoration:none;
+      border:1px solid rgba(92,26,26,0.2); padding:0.4rem 1rem;
+      border-radius:2px; transition:all 0.2s;
+    }
+    .nav-back:hover { color:var(--wood); border-color:var(--wood); }
+
+    /* HEADER */
+    .page-header {
+      padding: 6rem 4rem 3rem;
+      background:linear-gradient(160deg, var(--cream) 0%, var(--parchment) 100%);
+      margin-top:80px;
+    }
+    .header-tag {
+      font-family:'Raleway',sans-serif; font-size:0.72rem; font-weight:700;
+      letter-spacing:0.2em; text-transform:uppercase; color:var(--amber);
+      margin-bottom:0.8rem;
+    }
+    .page-header h1 {
+      font-family:'Playfair Display',serif; font-size:clamp(2rem,4vw,3.2rem);
+      font-weight:800; color:var(--wood-dark);
+    }
+    .page-header p {
+      font-family:'Lora',serif; font-style:italic;
+      font-size:1rem; color:var(--ink-soft); margin-top:0.8rem;
+    }
+
+    /* FILTRES */
+    .filter-bar {
+      padding:1.5rem 4rem; background:var(--cream);
+      border-bottom:1px solid rgba(92,26,26,0.1);
+      display:flex; gap:0.6rem; flex-wrap:wrap;
+    }
+    .cat-btn {
+      font-family:'Raleway',sans-serif; font-size:0.72rem; font-weight:600;
+      letter-spacing:0.06em; text-transform:uppercase;
+      padding:0.35rem 1rem; border-radius:20px; cursor:pointer;
+      border:1px solid var(--wood-light); color:var(--ink-soft);
+      background:transparent; transition:all 0.2s;
+    }
+    .cat-btn.active, .cat-btn:hover { background:var(--wood); color:var(--cream); border-color:var(--wood); }
+
+    /* GRILLE ARTICLES */
+    .blog-main { padding:3rem 4rem; max-width:1100px; margin:0 auto; }
+    .blog-grid {
+      display:grid; grid-template-columns:repeat(auto-fill, minmax(320px,1fr));
+      gap:2rem;
+    }
+    .article-card {
+      background:var(--cream); border-radius:6px;
+      box-shadow:0 2px 12px var(--shadow);
+      overflow:hidden; cursor:pointer;
+      transition:transform 0.25s, box-shadow 0.25s;
+      display:flex; flex-direction:column;
+    }
+    .article-card:hover { transform:translateY(-4px); box-shadow:0 10px 30px rgba(30,10,10,0.15); }
+    .article-img {
+      width:100%; height:200px; object-fit:cover;
+      background:var(--parchment);
+      display:flex; align-items:center; justify-content:center;
+      font-size:4rem; color:rgba(92,26,26,0.15);
+    }
+    .article-img img { width:100%; height:100%; object-fit:cover; }
+    .article-body { padding:1.5rem; flex:1; display:flex; flex-direction:column; }
+    .article-cat {
+      font-family:'Raleway',sans-serif; font-size:0.65rem; font-weight:700;
+      letter-spacing:0.15em; text-transform:uppercase; color:var(--amber);
+      margin-bottom:0.5rem;
+    }
+    .article-title {
+      font-family:'Playfair Display',serif; font-size:1.15rem;
+      font-weight:700; color:var(--ink); line-height:1.3; margin-bottom:0.5rem;
+    }
+    .article-date {
+      font-family:'Raleway',sans-serif; font-size:0.68rem;
+      color:rgba(60,40,40,0.45); margin-bottom:0.8rem;
+    }
+    .article-excerpt {
+      font-family:'Lora',serif; font-size:0.88rem; color:var(--ink-soft);
+      line-height:1.65; flex:1;
+      display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; overflow:hidden;
+    }
+    .article-lire {
+      font-family:'Raleway',sans-serif; font-size:0.72rem; font-weight:700;
+      letter-spacing:0.08em; text-transform:uppercase; color:var(--wood);
+      margin-top:1rem; display:inline-block;
+    }
+    .loading {
+      grid-column:1/-1; text-align:center; padding:4rem;
+      font-family:'Lora',serif; font-style:italic; color:var(--ink-soft);
+    }
+    .empty {
+      grid-column:1/-1; text-align:center; padding:4rem;
+      font-family:'Lora',serif; font-style:italic; color:var(--ink-soft);
+    }
+
+    /* MODALE ARTICLE */
+    .article-modal {
+      position:fixed; inset:0; z-index:200;
+      background:rgba(30,10,10,0.6); backdrop-filter:blur(4px);
+      display:none; align-items:flex-start; justify-content:center;
+      padding:100px 1rem 2rem; overflow-y:auto;
+    }
+    .article-modal.open { display:flex; }
+    .article-modal-inner {
+      background:var(--cream); border-radius:8px;
+      max-width:720px; width:100%;
+      box-shadow:0 20px 60px rgba(0,0,0,0.3);
+      animation:fadeUp 0.3s ease; overflow:hidden;
+    }
+    .modal-img { width:100%; max-height:380px; object-fit:cover; display:block; }
+    .modal-content { padding:2.5rem; }
+    .modal-cat {
+      font-family:'Raleway',sans-serif; font-size:0.68rem; font-weight:700;
+      letter-spacing:0.15em; text-transform:uppercase; color:var(--amber);
+      margin-bottom:0.5rem;
+    }
+    .modal-title {
+      font-family:'Playfair Display',serif; font-size:2rem;
+      font-weight:800; color:var(--wood-dark); line-height:1.15; margin-bottom:0.5rem;
+    }
+    .modal-date {
+      font-family:'Raleway',sans-serif; font-size:0.72rem;
+      color:rgba(60,40,40,0.45); margin-bottom:2rem;
+      padding-bottom:1.5rem; border-bottom:1px solid rgba(92,26,26,0.12);
+    }
+    .modal-text {
+      font-family:'Lora',serif; font-size:1rem; line-height:1.85;
+      color:var(--ink-soft); white-space:pre-wrap;
+    }
+    .modal-link {
+      display:inline-block; margin-top:1.5rem;
+      font-family:'Raleway',sans-serif; font-size:0.78rem; font-weight:700;
+      letter-spacing:0.08em; text-transform:uppercase;
+      color:var(--cream); background:var(--wood-dark);
+      padding:0.7rem 1.4rem; border-radius:2px; text-decoration:none;
+      transition:background 0.2s;
+    }
+    .modal-link:hover { background:var(--ink); }
+    .modal-close {
+      position:absolute; top:1rem; right:1rem;
+      font-family:'Raleway',sans-serif; font-size:0.72rem; font-weight:700;
+      letter-spacing:0.08em; text-transform:uppercase;
+      background:var(--cream); color:var(--ink-soft);
+      border:1px solid rgba(92,26,26,0.2); padding:0.4rem 1rem;
+      cursor:pointer; border-radius:2px; transition:all 0.2s;
+    }
+    .modal-close:hover { color:var(--wood); border-color:var(--wood); }
+
+    footer-mini {
+      text-align:center; padding:2rem; font-family:'Lora',serif;
+      font-style:italic; font-size:0.82rem; color:var(--ink-soft);
+      border-top:1px solid rgba(92,26,26,0.1); margin-top:3rem;
+    }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    @media(max-width:768px) {
+      .page-header, .filter-bar, .blog-main { padding-left:1.5rem; padding-right:1.5rem; }
+      .blog-grid { grid-template-columns:1fr; }
+      .article-modal { padding:90px 0.5rem 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="images/logo.png" alt="L'Esprit Large" />
+    L'<span>Esprit</span> Large
+  </a>
+  <a href="index.html" class="nav-back">← Retour au site</a>
+</nav>
+
+<div class="page-header">
+  <p class="header-tag">✦ La librairie prend la plume</p>
+  <h1>Notre blog</h1>
+  <p>Actualités, humeurs, coups de cœur et coulisses de la librairie.</p>
+</div>
+
+<div class="filter-bar" id="filterBar">
+  <button class="cat-btn active" onclick="filtrer('Tous', this)">Tous</button>
+</div>
+
+<div class="blog-main">
+  <div class="blog-grid" id="blogGrid">
+    <div class="loading">⏳ Chargement des articles…</div>
+  </div>
+</div>
+
+<div style="text-align:center;padding:2rem;font-family:'Lora',serif;font-style:italic;font-size:0.82rem;color:var(--ink-soft);border-top:1px solid rgba(92,26,26,0.1);margin-top:2rem;">
+  © 2026 Librairie L'Esprit Large · <a href="index.html" style="color:var(--wood);">Retour au site</a>
+</div>
+
+<!-- MODALE ARTICLE -->
+<div class="article-modal" id="articleModal" onclick="fermerModal(event)">
+  <div class="article-modal-inner" style="position:relative;">
+    <button class="modal-close" onclick="fermerModal()">✕ Fermer</button>
+    <img id="modalImg" class="modal-img" src="" alt="" style="display:none;" />
+    <div class="modal-content">
+      <div class="modal-cat" id="modalCat"></div>
+      <h2 class="modal-title" id="modalTitle"></h2>
+      <div class="modal-date" id="modalDate"></div>
+      <div class="modal-text" id="modalText"></div>
+      <a id="modalLink" class="modal-link" href="#" target="_blank" style="display:none;">→ Voir le lien</a>
+    </div>
+  </div>
+</div>
+
+<script>
+const GITHUB_RAW = 'https://raw.githubusercontent.com/lespritlarge/lespritlarge.github.io/main/blog.json';
+let ARTICLES = [];
+let filtreActif = 'Tous';
+
+async function charger() {
+  try {
+    const res = await fetch(GITHUB_RAW + '?t=' + Date.now());
+    if (!res.ok) throw new Error();
+    const data = await res.json();
+    ARTICLES = data.articles || [];
+    construireFiltres();
+    afficher();
+  } catch(e) {
+    document.getElementById('blogGrid').innerHTML =
+      '<div class="empty">📝 Aucun article pour l\'instant. Revenez bientôt !</div>';
+  }
+}
+
+function construireFiltres() {
+  const cats = ['Tous', ...new Set(ARTICLES.map(a => a.categorie).filter(Boolean))];
+  const bar = document.getElementById('filterBar');
+  bar.innerHTML = cats.map(c =>
+    `<button class="cat-btn ${c==='Tous'?'active':''}" onclick="filtrer('${c}',this)">${c}</button>`
+  ).join('');
+}
+
+function filtrer(cat, el) {
+  filtreActif = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  afficher();
+}
+
+function afficher() {
+  const liste = filtreActif === 'Tous' ? ARTICLES : ARTICLES.filter(a => a.categorie === filtreActif);
+  const grid = document.getElementById('blogGrid');
+  if (liste.length === 0) {
+    grid.innerHTML = '<div class="empty">Aucun article dans cette catégorie.</div>';
+    return;
+  }
+  grid.innerHTML = liste.map((a, i) => {
+    const imgHtml = a.image
+      ? `<div class="article-img"><img src="${a.image}" alt="${a.titre}" loading="lazy"/></div>`
+      : `<div class="article-img">📖</div>`;
+    const extrait = (a.texte || '').substring(0, 200) + ((a.texte||'').length > 200 ? '…' : '');
+    return `
+    <div class="article-card" onclick="ouvrirModal(${i})">
+      ${imgHtml}
+      <div class="article-body">
+        <div class="article-cat">${a.categorie || ''}</div>
+        <div class="article-title">${a.titre}</div>
+        <div class="article-date">${formaterDate(a.date)}</div>
+        <div class="article-excerpt">${extrait}</div>
+        <span class="article-lire">Lire la suite →</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function ouvrirModal(idx) {
+  const a = (filtreActif === 'Tous' ? ARTICLES : ARTICLES.filter(a => a.categorie === filtreActif))[idx];
+  document.getElementById('modalCat').textContent   = a.categorie || '';
+  document.getElementById('modalTitle').textContent = a.titre;
+  document.getElementById('modalDate').textContent  = formaterDate(a.date);
+  document.getElementById('modalText').textContent  = a.texte || '';
+  const img = document.getElementById('modalImg');
+  if (a.image) { img.src = a.image; img.style.display = 'block'; }
+  else { img.style.display = 'none'; }
+  const lien = document.getElementById('modalLink');
+  if (a.lien) { lien.href = a.lien; lien.textContent = a.lien_label || '→ Voir le lien'; lien.style.display = 'inline-block'; }
+  else { lien.style.display = 'none'; }
+  document.getElementById('articleModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function fermerModal(e) {
+  if (e && e.target !== document.getElementById('articleModal') && e.type === 'click') return;
+  document.getElementById('articleModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if(e.key==='Escape') fermerModal(); });
+
+function formaterDate(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' });
+}
+
+charger();
+</script>
+</body>
+</html>
