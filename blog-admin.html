@@ -128,6 +128,80 @@ details[open] .rblock summary::before{transform:rotate(90deg);}
     <input type="password" id="pwdInput" placeholder="••••••••" onkeydown="if(event.key==='Enter')login()" autocomplete="current-password"/>
     <button onclick="login()">Accéder →</button>
     <p class="lerr" id="lerr">Mot de passe incorrect.</p>
+  <!-- AVIS DE TEMPÊTE -->
+  <div class="panel" id="panel-tempete">
+    <div style="flex:1;overflow-y:auto;padding:2rem;background:var(--warm);max-width:760px;margin:0 auto;width:100%;">
+      <div class="fhead">🌊 Avis de Tempête</div>
+      <p style="font-family:'Lora',serif;font-style:italic;font-size:.88rem;color:var(--soft);margin-bottom:1.5rem;line-height:1.6;">
+        Ajoutez chaque nouvelle newsletter. L'image doit déjà être uploadée dans le dossier <strong>avisdetempete/</strong> sur GitHub.
+      </p>
+
+      <!-- Liste des numéros existants -->
+      <div id="tempeteList" style="margin-bottom:2rem;"></div>
+
+      <!-- Formulaire ajout -->
+      <div style="background:var(--cream);border:1.5px solid rgba(92,26,26,.15);border-radius:6px;padding:1.5rem;">
+        <div class="fhead" style="font-size:.9rem;margin-bottom:1rem;">Ajouter un numéro</div>
+        <div class="frow">
+          <div class="f">
+            <label>Mois *</label>
+            <select id="tMois">
+              <option value="">— Choisir —</option>
+              <option>Janvier</option><option>Février</option><option>Mars</option>
+              <option>Avril</option><option>Mai</option><option>Juin</option>
+              <option>Juillet</option><option>Août</option><option>Septembre</option>
+              <option>Octobre</option><option>Novembre</option><option>Décembre</option>
+            </select>
+          </div>
+          <div class="f">
+            <label>Année *</label>
+            <input type="number" id="tAnnee" placeholder="2026" min="2020" max="2099" value="2026"/>
+          </div>
+        </div>
+        <div class="f">
+          <label>Fichier image *</label>
+          <input type="file" id="tFichierFile" accept="image/*,application/pdf" style="font-size:.8rem;margin-bottom:.5rem;width:100%;" onchange="Tempete.previewFichier()"/>
+          <div id="tApercu" style="display:none;margin:.5rem 0;padding:.8rem;background:var(--warm);border-radius:4px;">
+            <img id="tApercuImg" src="" alt="" style="max-height:140px;border-radius:3px;" onerror="this.style.display='none'"/>
+            <div id="tApercuNom" style="font-family:'Raleway',sans-serif;font-size:.75rem;color:var(--soft);margin-top:.4rem;"></div>
+          </div>
+          <small>Le fichier sera uploadé automatiquement dans <code>avisdetempete/</code> sur GitHub.</small>
+        </div>
+        <div class="fbtns" style="gap:.8rem;flex-wrap:wrap;">
+          <button class="btn-save" onclick="Tempete.ajouter()">🌊 Ajouter ce numéro</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- À PROPOS -->
+  <div class="panel" id="panel-apropos">
+    <div style="flex:1;overflow-y:auto;padding:2rem;background:var(--warm);max-width:760px;margin:0 auto;width:100%;">
+      <div class="fhead">👥 Page À propos</div>
+      <p style="font-family:'Lora',serif;font-style:italic;font-size:.88rem;color:var(--soft);margin-bottom:1.5rem;line-height:1.6;">
+        Modifiez les présentations des libraires et les valeurs. Les photos doivent être uploadées dans <strong>images/</strong> sur GitHub.
+      </p>
+
+      <!-- LIBRAIRES -->
+      <div style="background:var(--cream);border:1.5px solid rgba(92,26,26,.15);border-radius:6px;padding:1.5rem;margin-bottom:1.5rem;">
+        <div class="fhead" style="font-size:.9rem;margin-bottom:1.2rem;">Les libraires</div>
+        <div id="librairesForms"></div>
+        <button style="margin-top:.5rem;padding:.5rem 1rem;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:rgba(92,26,26,.08);color:var(--wood);border:1.5px solid rgba(92,26,26,.2);border-radius:3px;cursor:pointer;" onclick="Apropos.ajouterLibraire()">+ Ajouter un libraire</button>
+      </div>
+
+      <!-- VALEURS -->
+      <div style="background:var(--cream);border:1.5px solid rgba(92,26,26,.15);border-radius:6px;padding:1.5rem;margin-bottom:1.5rem;">
+        <div class="fhead" style="font-size:.9rem;margin-bottom:1.2rem;">Les valeurs</div>
+        <div id="valeursForms"></div>
+        <button style="margin-top:.5rem;padding:.5rem 1rem;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:rgba(92,26,26,.08);color:var(--wood);border:1.5px solid rgba(92,26,26,.2);border-radius:3px;cursor:pointer;" onclick="Apropos.ajouterValeur()">+ Ajouter une valeur</button>
+      </div>
+
+      <div class="fbtns">
+        <button class="btn-save" onclick="Apropos.sauvegarder()">💾 Publier la page À propos</button>
+      </div>
+    </div>
+  </div>
+
   </div>
 </div>
 
@@ -155,6 +229,8 @@ details[open] .rblock summary::before{transform:rotate(90deg);}
     <button class="tab active" onclick="switchTab('blog',this)">📝 Blog</button>
     <button class="tab" onclick="switchTab('events',this)">📅 Événements</button>
     <button class="tab" onclick="switchTab('coups',this)">❤️ Coups de cœur</button>
+    <button class="tab" onclick="switchTab('tempete',this)">🌊 Avis de Tempête</button>
+    <button class="tab" onclick="switchTab('apropos',this)">👥 À propos</button>
   </div>
 
   <div class="body">
@@ -525,7 +601,7 @@ var Evts = (() => {
     try {
       const { data } = await ghRead('evenements.json');
       items = data ? (data.evenements || []) : [];
-      items.sort((a,b) => new Date(a.date) - new Date(b.date));
+      items.sort((a,b) => (a.date > b.date ? 1 : a.date < b.date ? -1 : 0));
     } catch(e) {
       items = [];
       document.getElementById('evtList').innerHTML = '<div class="lempty" style="color:#c0392b">❌ ' + e.message + '</div>';
@@ -654,10 +730,10 @@ var Evts = (() => {
   }
 
   async function sauvegarder() {
-    const titre = document.getElementById('eTitre').value.trim();
-    const date  = document.getElementById('eDate').value;
-    if (!titre) { toast('⚠️ Le titre est obligatoire.'); return; }
-    if (!date)  { toast('⚠️ La date est obligatoire.'); return; }
+    const titre   = document.getElementById('eTitre').value.trim();
+    const dateVal = document.getElementById('eDate').value;
+    if (!titre)   { toast('⚠️ Le titre est obligatoire.'); return; }
+    if (!dateVal) { toast('⚠️ La date est obligatoire.'); return; }
 
     const base = {
       titre,
@@ -675,7 +751,7 @@ var Evts = (() => {
 
     if (idx === null && freq && fin) {
       // Création avec récurrence → générer toutes les occurrences avec un groupe_id commun
-      const dates = genDates(date, freq, fin);
+      const dates = genDates(dateVal, freq, fin);
       if (!dates.length) { toast('⚠️ Aucune date générée.'); return; }
 
       const groupe_id = Date.now().toString(36) + '_g';
@@ -700,7 +776,7 @@ var Evts = (() => {
     } else {
       // Création simple ou modification
       const groupe_id_existant = idx !== null ? items[idx].groupe_id : undefined;
-      const evt = { ...base, id: idx !== null ? items[idx].id : Date.now().toString(), date, recurrent: false };
+      const evt = { ...base, id: idx !== null ? items[idx].id : Date.now().toString(), date: dateVal, recurrent: false };
       if (groupe_id_existant) { evt.groupe_id = groupe_id_existant; evt.recurrent = true; }
       if (idx !== null) items[idx] = evt; else items.push(evt);
       items.sort((a,b) => (a.date > b.date ? 1 : -1));
@@ -843,7 +919,314 @@ var Coups = (() => {
 })();
 
 // ── INIT ──────────────────────────────────
-function init() { loadToken(); Blog.charger(); Evts.charger(); Coups.charger(); }
+
+// ══════════════════════════════════════════
+//  AVIS DE TEMPÊTE
+// ══════════════════════════════════════════
+var Tempete = (() => {
+  let items = [];
+
+  async function charger() {
+    document.getElementById('tempeteList').innerHTML = '<p style="font-style:italic;color:var(--soft);font-size:.85rem;">⏳ Chargement…</p>';
+    try {
+      const { data } = await ghRead('avisdetempete.json');
+      items = data ? (data.numeros || []) : [];
+    } catch(e) { items = []; }
+    renderList();
+  }
+
+  function renderList() {
+    const el = document.getElementById('tempeteList');
+    if (!items.length) {
+      el.innerHTML = '<p style="font-family:Lora,serif;font-style:italic;font-size:.85rem;color:var(--soft);">Aucun numéro pour l\'instant.</p>';
+      return;
+    }
+    const parAnnee = {};
+    items.forEach(n => { if (!parAnnee[n.annee]) parAnnee[n.annee] = []; parAnnee[n.annee].push(n); });
+    el.innerHTML = Object.keys(parAnnee).sort((a,b) => b-a).map(annee => `
+      <div style="margin-bottom:1.2rem;">
+        <div style="font-family:'Raleway',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--wood);margin-bottom:.5rem;">${annee}</div>
+        ${parAnnee[annee].map(n => `
+          <div style="display:flex;align-items:center;gap:.8rem;padding:.6rem .8rem;background:var(--warm);border-radius:4px;margin-bottom:.3rem;border:1px solid rgba(92,26,26,.08);">
+            <img src="avisdetempete/${n.fichier}" style="width:36px;height:50px;object-fit:cover;border-radius:2px;flex-shrink:0;" onerror="this.style.opacity='.3'"/>
+            <div style="flex:1;font-family:'Lora',serif;font-size:.88rem;">${n.mois} ${n.annee}</div>
+            <div style="font-size:.7rem;color:var(--soft);font-family:'Raleway',sans-serif;">${n.fichier}</div>
+            <button onclick="Tempete.supprimer('${n.fichier}')" style="background:none;border:none;cursor:pointer;font-size:1rem;color:#c0392b;padding:.2rem;" title="Supprimer">🗑</button>
+          </div>`).join('')}
+      </div>`).join('');
+  }
+
+  function previewFichier() {
+    const fileInput = document.getElementById('tFichierFile');
+    if (!fileInput.files.length) return;
+    const file = fileInput.files[0];
+    const ap = document.getElementById('tApercu');
+    ap.style.display = 'block';
+    document.getElementById('tApercuNom').textContent = file.name + ' (' + Math.round(file.size/1024) + ' Ko)';
+    const reader = new FileReader();
+    reader.onload = e => { document.getElementById('tApercuImg').src = e.target.result; document.getElementById('tApercuImg').style.display = 'block'; };
+    reader.readAsDataURL(file);
+  }
+
+  async function ajouter() {
+    const mois   = document.getElementById('tMois').value;
+    const annee  = document.getElementById('tAnnee').value.trim();
+    const fileInput = document.getElementById('tFichierFile');
+    if (!mois || !annee) { toast('⚠️ Choisissez le mois et l\'année.'); return; }
+    if (!fileInput.files.length) { toast('⚠️ Sélectionnez un fichier image.'); return; }
+    const file = fileInput.files[0];
+    const ext = file.name.split('.').pop().toLowerCase();
+    const fichier = 'AdT' + annee + mois.replace(/[éèêë]/g,'e').replace(/[àâ]/g,'a') + '.' + ext;
+
+    if (items.find(n => n.fichier === fichier)) { toast('⚠️ Ce numéro existe déjà.'); return; }
+
+    // Upload de l'image sur GitHub
+    const token = getToken();
+    if (!token) { toast('⚠️ Token GitHub requis.'); return; }
+    toast('⏳ Upload de l\'image…');
+
+    const b64 = await new Promise((res, rej) => {
+      const r = new FileReader();
+      r.onload = () => res(r.result.split(',')[1]);
+      r.onerror = rej;
+      r.readAsDataURL(file);
+    });
+
+    const chemin = 'avisdetempete/' + fichier;
+    let sha = null;
+    try { sha = await ghGetSha(chemin, token); } catch(_) {}
+    const body = { message: '🌊 Avis de Tempête : ' + mois + ' ' + annee, content: b64 };
+    if (sha) body.sha = sha;
+
+    const r = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${chemin}`, {
+      method: 'PUT',
+      headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+
+    if (!r.ok && r.status !== 201) {
+      const err = await r.json().catch(()=>({}));
+      toast('❌ Erreur upload image : ' + (err.message || r.status));
+      return;
+    }
+
+    // Ajouter dans la liste et sauvegarder
+    items.unshift({ mois, annee: parseInt(annee), fichier });
+    const ok = await ghWrite('avisdetempete.json', { mis_a_jour: new Date().toISOString(), numeros: items }, '🌊 AdT ajouté : ' + mois + ' ' + annee);
+    if (ok) {
+      toast('✅ ' + mois + ' ' + annee + ' ajouté !');
+      document.getElementById('tMois').selectedIndex = 0;
+      fileInput.value = '';
+      document.getElementById('tApercu').style.display = 'none';
+      renderList();
+    }
+  }
+
+  async function supprimer(fichier) {
+    if (!confirm('Retirer « ' + fichier + ' » de la liste ? (Le fichier image reste sur GitHub.)')) return;
+    items = items.filter(n => n.fichier !== fichier);
+    const ok = await ghWrite('avisdetempete.json', { mis_a_jour: new Date().toISOString(), numeros: items }, '🗑️ Suppression AdT : ' + fichier);
+    if (ok) { toast('🗑️ Numéro retiré.'); renderList(); }
+  }
+
+  return { charger, previewFichier, ajouter, supprimer };
+})();
+
+// ══════════════════════════════════════════
+//  À PROPOS
+// ══════════════════════════════════════════
+var Apropos = (() => {
+  let libraires = [], valeurs = [];
+
+  const VALEURS_DEFAUT = [
+    { icone:'📖', titre:'Le conseil humain', texte:"Pas d'algorithme ici. Chaque recommandation vient d'un libraire qui a lu, aimé (ou pas), et qui prend le temps de comprendre ce que vous cherchez." },
+    { icone:'🌍', titre:"L'ouverture au monde", texte:"Littératures traduites, voix peu entendues, regards différents… Nous croyons que les livres sont le meilleur moyen d'aller au-delà de sa propre expérience." },
+    { icone:'🤝', titre:'Ancrage local', texte:"Librairie indépendante à Guérande depuis 2006, nous faisons partie de la vie de la presqu'île." },
+    { icone:'🎉', titre:'La librairie vivante', texte:"Rencontres, lectures, casse-croûtes… nous aimons que la librairie soit un endroit où on revient, où on reste, où l'on se retrouve autour de ce qui nous lie : les histoires." },
+  ];
+
+  async function charger() {
+    try {
+      const { data } = await ghRead('apropos.json');
+      libraires = data ? (data.libraires || []) : [];
+      valeurs   = data ? (data.valeurs   || VALEURS_DEFAUT) : VALEURS_DEFAUT;
+    } catch(e) { libraires = []; valeurs = VALEURS_DEFAUT; }
+    renderForms();
+  }
+
+  function renderForms() {
+    // Libraires
+    const lEl = document.getElementById('librairesForms');
+    lEl.innerHTML = libraires.map((l, i) => `
+      <div style="border:1px solid rgba(92,26,26,.12);border-radius:5px;padding:1.2rem;margin-bottom:1rem;background:var(--warm);position:relative;">
+        <button onclick="Apropos.supprimerLibraire(${i})" style="position:absolute;top:.6rem;right:.6rem;background:none;border:none;cursor:pointer;font-size:1rem;color:#c0392b;" title="Supprimer">🗑</button>
+        <div class="frow">
+          <div class="f"><label>Prénom *</label><input type="text" id="lPrenom${i}" value="${l.prenom||''}"/></div>
+          <div class="f"><label>Rôle</label><input type="text" id="lRole${i}" value="${l.role||''}" placeholder="Libraire · Co-fondateur·rice"/></div>
+        </div>
+        <div class="f"><label>Bio</label><textarea id="lBio${i}" style="min-height:80px;">${l.bio||''}</textarea></div>
+        <div class="frow">
+          <div class="f">
+            <label>Photo</label>
+            <div style="display:flex;gap:.6rem;align-items:flex-start;flex-wrap:wrap;">
+              ${l.photo ? `<img src="${l.photo}" style="width:48px;height:64px;object-fit:cover;border-radius:3px;flex-shrink:0;" onerror="this.style.display='none'" id="lPhotoPreview${i}"/>` : `<div id="lPhotoPreview${i}" style="width:48px;height:64px;background:var(--parchment);border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">🧑‍💼</div>`}
+              <div style="flex:1;min-width:160px;">
+                <input type="file" id="lPhotoFile${i}" accept="image/*" style="font-size:.75rem;margin-bottom:.4rem;width:100%;" onchange="Apropos.previewPhoto(${i})"/>
+                <input type="text" id="lPhoto${i}" value="${l.photo||''}" placeholder="images/prenom.jpg" style="font-size:.75rem;"/>
+                <small style="color:var(--soft);">Sélectionnez un fichier — il sera uploadé dans images/ sur GitHub lors de la sauvegarde.</small>
+              </div>
+            </div>
+          </div>
+          <div class="f"><label>Citation</label><input type="text" id="lCitation${i}" value="${l.citation||''}"/></div>
+        </div>
+        <div class="f"><label>Genres (séparés par des virgules)</label><input type="text" id="lGenres${i}" value="${(l.genres||[]).join(', ')}" placeholder="Littérature française, Essais"/></div>
+      </div>`).join('') || '<p style="font-style:italic;color:var(--soft);font-size:.85rem;">Aucun libraire — cliquez sur « + Ajouter ».</p>';
+
+    // Valeurs
+    const vEl = document.getElementById('valeursForms');
+    vEl.innerHTML = valeurs.map((v, i) => `
+      <div style="border:1px solid rgba(92,26,26,.12);border-radius:5px;padding:1rem;margin-bottom:.8rem;background:var(--warm);position:relative;">
+        <button onclick="Apropos.supprimerValeur(${i})" style="position:absolute;top:.5rem;right:.5rem;background:none;border:none;cursor:pointer;font-size:1rem;color:#c0392b;">🗑</button>
+        <div class="frow">
+          <div class="f" style="max-width:80px;"><label>Icône</label><input type="text" id="vIcone${i}" value="${v.icone||''}"/></div>
+          <div class="f"><label>Titre *</label><input type="text" id="vTitre${i}" value="${v.titre||''}"/></div>
+        </div>
+        <div class="f"><label>Texte</label><textarea id="vTexte${i}" style="min-height:60px;">${v.texte||''}</textarea></div>
+      </div>`).join('');
+  }
+
+  function lireFormulaires() {
+    const nb = document.querySelectorAll('[id^="lPrenom"]').length;
+    libraires = [];
+    for (let i = 0; i < nb; i++) {
+      libraires.push({
+        prenom:   document.getElementById('lPrenom'+i).value.trim(),
+        role:     document.getElementById('lRole'+i).value.trim(),
+        bio:      document.getElementById('lBio'+i).value.trim(),
+        photo:    document.getElementById('lPhoto'+i).value.trim(),
+        citation: document.getElementById('lCitation'+i).value.trim(),
+        genres:   document.getElementById('lGenres'+i).value.split(',').map(s=>s.trim()).filter(Boolean),
+      });
+    }
+    const nbV = document.querySelectorAll('[id^="vIcone"]').length;
+    valeurs = [];
+    for (let i = 0; i < nbV; i++) {
+      valeurs.push({
+        icone: document.getElementById('vIcone'+i).value.trim(),
+        titre: document.getElementById('vTitre'+i).value.trim(),
+        texte: document.getElementById('vTexte'+i).value.trim(),
+      });
+    }
+  }
+
+  function ajouterLibraire() {
+    lireFormulaires();
+    libraires.push({ prenom:'', role:'Libraire', bio:'', photo:'', citation:'', genres:[] });
+    renderForms();
+    // Scroll vers le bas
+    document.getElementById('librairesForms').lastElementChild.scrollIntoView({ behavior:'smooth' });
+  }
+
+  function supprimerLibraire(i) {
+    lireFormulaires();
+    if (!confirm('Supprimer ce libraire ?')) return;
+    libraires.splice(i, 1);
+    renderForms();
+  }
+
+  function ajouterValeur() {
+    lireFormulaires();
+    valeurs.push({ icone:'📚', titre:'', texte:'' });
+    renderForms();
+  }
+
+  function supprimerValeur(i) {
+    lireFormulaires();
+    valeurs.splice(i, 1);
+    renderForms();
+  }
+
+  async function sauvegarder() {
+    lireFormulaires();
+    if (!libraires.length) { toast('⚠️ Ajoutez au moins un libraire.'); return; }
+    toast('⏳ Upload des photos…');
+    const photosOk = await uploadPhotos();
+    if (!photosOk) return;
+    lireFormulaires(); // relire après mise à jour des chemins photo
+    const ok = await ghWrite('apropos.json', {
+      mis_a_jour: new Date().toISOString(),
+      libraires,
+      valeurs,
+    }, '👥 Mise à jour page À propos');
+    if (ok) toast('✅ Page À propos publiée !');
+  }
+
+  function previewPhoto(i) {
+    const file = document.getElementById('lPhotoFile'+i).files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const prev = document.getElementById('lPhotoPreview'+i);
+      if (prev.tagName === 'IMG') {
+        prev.src = e.target.result;
+      } else {
+        prev.outerHTML = `<img src="${e.target.result}" id="lPhotoPreview${i}" style="width:48px;height:64px;object-fit:cover;border-radius:3px;flex-shrink:0;"/>`;
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+
+  async function uploadPhotos() {
+    // Upload chaque photo sélectionnée via file input
+    const nb = document.querySelectorAll('[id^="lPrenom"]').length;
+    for (let i = 0; i < nb; i++) {
+      const fileInput = document.getElementById('lPhotoFile'+i);
+      if (!fileInput || !fileInput.files.length) continue;
+      const file = fileInput.files[0];
+      const ext  = file.name.split('.').pop();
+      const nom  = 'images/' + (document.getElementById('lPrenom'+i).value.trim().toLowerCase().replace(/[^a-z0-9]/g,'_') || 'libraire'+i) + '.' + ext;
+
+      // Lire en base64
+      const b64 = await new Promise((res, rej) => {
+        const r = new FileReader();
+        r.onload = () => {
+          // Enlever le préfixe data:image/...;base64,
+          const result = r.result.split(',')[1];
+          res(result);
+        };
+        r.onerror = rej;
+        r.readAsDataURL(file);
+      });
+
+      // Uploader sur GitHub
+      const token = getToken();
+      if (!token) { toast('⚠️ Token GitHub requis pour uploader les photos.'); return false; }
+      let sha = null;
+      try { sha = await ghGetSha(nom, token); } catch(_) {}
+      const body = { message: '🖼️ Photo libraire : ' + nom, content: b64 };
+      if (sha) body.sha = sha;
+      const r = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${nom}`, {
+        method: 'PUT',
+        headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      if (r.ok || r.status === 201) {
+        // Mettre à jour le champ texte avec le chemin
+        document.getElementById('lPhoto'+i).value = nom;
+        toast('🖼️ Photo uploadée : ' + nom);
+      } else {
+        const err = await r.json().catch(()=>({}));
+        toast('❌ Erreur upload photo : ' + (err.message || r.status));
+        return false;
+      }
+    }
+    return true;
+  }
+
+  return { charger, ajouterLibraire, supprimerLibraire, ajouterValeur, supprimerValeur, sauvegarder, previewPhoto };
+})();
+
+function init() { loadToken(); Blog.charger(); Evts.charger(); Coups.charger(); Tempete.charger(); Apropos.charger(); }
 window.addEventListener('DOMContentLoaded', function() {
   if (sessionStorage.getItem('el_auth') === '1') { showAdmin(); init(); }
 });

@@ -197,56 +197,7 @@
       <h2 class="section-title">Les libraires</h2>
       <p>Ce sont eux qui choisissent les livres, rédigent les coups de cœur et accueillent chaque lecteur avec la même attention.</p>
     </div>
-    <div class="equipe-grid">
-
-      <!-- LIBRAIRE 1 — remplacez les textes et ajoutez une photo -->
-      <div class="libraire-card fade-in">
-        <div class="libraire-photo">
-          <!--
-            Pour ajouter une photo :
-            <img src="images/prenom.jpg" alt="Prénom" />
-          -->
-          <div class="ph-icon">🧑‍💼</div>
-          <div class="ph-hint">Photo à ajouter</div>
-        </div>
-        <div class="libraire-info">
-          <div class="libraire-prenom">Prénom</div>
-          <div class="libraire-role">Libraire · Co-fondateur·rice</div>
-          <p class="libraire-bio">
-            Quelques lignes de présentation : parcours, ce qui vous a amené à ce métier,
-            ce que vous aimez dans votre quotidien à la librairie…
-          </p>
-          <div class="libraire-genres">
-            <span class="genre-tag">Littérature française</span>
-            <span class="genre-tag">Essais</span>
-            <span class="genre-tag">Poésie</span>
-          </div>
-          <div class="libraire-citation">Une phrase ou citation qui vous ressemble.</div>
-        </div>
-      </div>
-
-      <!-- LIBRAIRE 2 -->
-      <div class="libraire-card fade-in" style="transition-delay:0.12s">
-        <div class="libraire-photo">
-          <div class="ph-icon">🧑‍💼</div>
-          <div class="ph-hint">Photo à ajouter</div>
-        </div>
-        <div class="libraire-info">
-          <div class="libraire-prenom">Prénom</div>
-          <div class="libraire-role">Libraire</div>
-          <p class="libraire-bio">
-            Quelques lignes de présentation : parcours, ce qui vous a amené à ce métier,
-            ce que vous aimez dans votre quotidien à la librairie…
-          </p>
-          <div class="libraire-genres">
-            <span class="genre-tag">Jeunesse</span>
-            <span class="genre-tag">Littérature étrangère</span>
-          </div>
-          <div class="libraire-citation">Une phrase ou citation qui vous ressemble.</div>
-        </div>
-      </div>
-
-    </div>
+    <div class="equipe-grid" id="libraireGrid"><p style="font-style:italic;color:var(--ink-soft);">⏳ Chargement…</p></div>
   </div>
 </section>
 
@@ -258,28 +209,7 @@
       <h2 class="section-title">Ce en quoi nous croyons</h2>
       <p class="valeurs-intro">Vingt ans de librairie indépendante, c'est aussi vingt ans à affiner ce qui compte vraiment.</p>
     </div>
-    <div class="valeurs-grid">
-      <div class="valeur-card fade-in" style="transition-delay:0.05s">
-        <div class="valeur-icone">📖</div>
-        <div class="valeur-titre">Le conseil humain</div>
-        <p class="valeur-texte">Pas d'algorithme ici. Chaque recommandation vient d'un libraire qui a lu, aimé (ou pas), et qui prend le temps de comprendre ce que vous cherchez — même quand vous ne le savez pas encore.</p>
-      </div>
-      <div class="valeur-card fade-in" style="transition-delay:0.1s">
-        <div class="valeur-icone">🌍</div>
-        <div class="valeur-titre">L'ouverture au monde</div>
-        <p class="valeur-texte">Littératures traduites, voix peu entendues, regards différents… Nous croyons que les livres sont le meilleur moyen d'aller au-delà de sa propre expérience.</p>
-      </div>
-      <div class="valeur-card fade-in" style="transition-delay:0.15s">
-        <div class="valeur-icone">🤝</div>
-        <div class="valeur-titre">Ancrage local</div>
-        <p class="valeur-texte">Librairie indépendante à Guérande depuis 2006, nous faisons partie de la vie de la presqu'île. Soutenir L'Esprit Large, c'est soutenir un commerce qui vous ressemble.</p>
-      </div>
-      <div class="valeur-card fade-in" style="transition-delay:0.2s">
-        <div class="valeur-icone">🎉</div>
-        <div class="valeur-titre">La librairie vivante</div>
-        <p class="valeur-texte">Rencontres, lectures, casse-croûtes… nous aimons que la librairie soit un endroit où on revient, où on reste, où l'on se retrouve autour de ce qui nous lie : les histoires.</p>
-      </div>
-    </div>
+    <div class="valeurs-grid" id="valeursGrid"></div>
   </div>
 </section>
 
@@ -377,18 +307,60 @@
 </footer>
 <div class="footer-bottom">© 2026 L'Esprit Large · Librairie indépendante depuis 2006</div>
 
+
 <script>
+  // Animations scroll
   const obs = new IntersectionObserver(
     es => es.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }),
     { threshold: 0.1 }
   );
-  document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+  function observeAll() { document.querySelectorAll('.fade-in').forEach(el => obs.observe(el)); }
 
+  async function chargerApropos() {
+    try {
+      const r = await fetch('apropos.json?t=' + Date.now());
+      if (!r.ok) throw new Error();
+      const data = await r.json();
+
+      // Libraires
+      const libraires = data.libraires || [];
+      document.getElementById('libraireGrid').innerHTML = libraires.map((l, i) => `
+        <div class="libraire-card fade-in" style="transition-delay:${i*0.12}s">
+          <div class="libraire-photo">
+            ${l.photo
+              ? `<img src="${l.photo}" alt="${l.prenom}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/>
+                 <div style="display:none;text-align:center;"><div class="ph-icon">🧑‍💼</div></div>`
+              : '<div class="ph-icon">🧑‍💼</div><div class="ph-hint">Photo à venir</div>'}
+          </div>
+          <div class="libraire-info">
+            <div class="libraire-prenom">${l.prenom}</div>
+            <div class="libraire-role">${l.role}</div>
+            <p class="libraire-bio">${l.bio}</p>
+            <div class="libraire-genres">${(l.genres||[]).map(g=>`<span class="genre-tag">${g}</span>`).join('')}</div>
+            ${l.citation ? `<div class="libraire-citation">${l.citation}</div>` : ''}
+          </div>
+        </div>`).join('');
+
+      // Valeurs
+      const valeurs = data.valeurs || [];
+      document.getElementById('valeursGrid').innerHTML = valeurs.map((v, i) => `
+        <div class="valeur-card fade-in" style="transition-delay:${i*0.05+0.05}s">
+          <div class="valeur-icone">${v.icone}</div>
+          <div class="valeur-titre">${v.titre}</div>
+          <p class="valeur-texte">${v.texte}</p>
+        </div>`).join('');
+
+    } catch(e) {
+      document.getElementById('libraireGrid').innerHTML = '<p style="font-style:italic;color:var(--ink-soft);">Contenu bientôt disponible.</p>';
+    }
+    observeAll();
+  }
+
+  // Lightbox galerie
   function openLightbox(el) {
     const img = el.querySelector('img');
     if (!img) return;
     document.getElementById('lightboxImg').src = img.src;
-    document.getElementById('lightboxImg').alt = img.dataset.legende || '';
     document.getElementById('lightbox').classList.add('open');
     document.body.style.overflow = 'hidden';
   }
@@ -397,6 +369,8 @@
     document.body.style.overflow = '';
   }
   document.addEventListener('keydown', e => { if(e.key==='Escape') closeLightbox(); });
+
+  chargerApropos();
 </script>
 </body>
 </html>
