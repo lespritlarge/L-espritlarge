@@ -178,6 +178,25 @@
     .btn-del:hover{background:rgba(192,57,43,.07);}
     .form-hint{margin-top:1rem;font-size:.72rem;font-style:italic;color:rgba(60,40,40,.38);line-height:1.6;}
 
+    /* ── RÉCURRENCE ── */
+    .recur-block{
+      background:rgba(92,26,26,.05);border:1.5px solid rgba(92,26,26,.15);
+      border-radius:4px;padding:1rem 1.1rem;margin-bottom:1.1rem;
+    }
+    .recur-block summary{
+      font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+      color:var(--wood);cursor:pointer;list-style:none;display:flex;align-items:center;gap:.5rem;
+    }
+    .recur-block summary::before{content:'▶';font-size:.55rem;transition:transform .2s;}
+    details[open] .recur-block summary::before{transform:rotate(90deg);}
+    .recur-block .f{margin-bottom:.8rem;}
+    .recur-preview{
+      background:var(--cream);border:1px solid rgba(92,26,26,.12);border-radius:3px;
+      padding:.7rem .9rem;font-family:'Lora',serif;font-size:.8rem;color:var(--ink-soft);
+      max-height:120px;overflow-y:auto;line-height:1.8;margin-top:.5rem;
+    }
+    .recur-preview em{color:rgba(60,40,40,.4);}
+
     /* TOAST */
     .toast{
       position:fixed;bottom:2rem;right:2rem;z-index:999;
@@ -340,14 +359,37 @@
               <label for="eSpecial">🎉 Événement spécial (fond doré, mis en avant)</label>
             </div>
             <div class="f-check">
-              <input type="checkbox" id="eRecurrent" />
-              <label for="eRecurrent">🔁 Événement récurrent (ex : tous les mercredis)</label>
-            </div>
-            <div class="f-check">
               <input type="checkbox" id="eFermeture" />
               <label for="eFermeture">🔒 Fermeture exceptionnelle (style grisé, sans bouton inscription)</label>
             </div>
           </div>
+
+          <!-- RÉCURRENCE -->
+          <details id="recurDetails">
+            <div class="recur-block">
+              <summary>🔁 Répéter cet événement plusieurs fois</summary>
+              <br/>
+              <div class="f-row" style="margin-top:.5rem;">
+                <div class="f">
+                  <label>Fréquence</label>
+                  <select id="rFreq" onchange="Evts.updatePreview()">
+                    <option value="">— Pas de répétition —</option>
+                    <option value="weekly">Toutes les semaines</option>
+                    <option value="biweekly">Toutes les 2 semaines</option>
+                    <option value="monthly">Tous les mois (même jour)</option>
+                  </select>
+                </div>
+                <div class="f">
+                  <label>Jusqu'au</label>
+                  <input type="date" id="rJusquau" onchange="Evts.updatePreview()" />
+                </div>
+              </div>
+              <div class="f">
+                <label>Aperçu des dates générées</label>
+                <div class="recur-preview" id="recurPreview"><em>Choisissez une fréquence et une date de fin…</em></div>
+              </div>
+            </div>
+          </details>
 
           <div class="form-actions">
             <button class="btn-save" onclick="Evts.sauvegarder()">💾 Publier l'événement</button>
@@ -537,7 +579,7 @@ const Blog = (() => {
     if (newSha !== false) { sha = newSha; toast('🗑️ Article supprimé.'); nouveau(); }
   }
 
-  return { charger, select, nouveau, sauvegarder, supprimer };
+  return { charger, select, nouveau, sauvegarder, supprimer, updatePreview };
 })();
 
 // ════════════════════════════════════════════════════
@@ -580,8 +622,12 @@ const Evts = (() => {
     document.getElementById('eDesc').value     = e.desc     || '';
     document.getElementById('eAffiche').value  = e.affiche  || '';
     document.getElementById('eSpecial').checked   = !!e.special;
-    document.getElementById('eRecurrent').checked = !!e.recurrent;
     document.getElementById('eFermeture').checked = !!e.fermeture;
+    // Réinitialiser la récurrence (modification = toujours 1 seul événement)
+    document.getElementById('rFreq').value     = '';
+    document.getElementById('rJusquau').value  = '';
+    document.getElementById('recurPreview').innerHTML = '<em>La récurrence ne s\'applique qu\'à la création.</em>';
+    document.getElementById('recurDetails').removeAttribute('open');
     document.getElementById('eDel').style.display = 'inline-block';
     renderList();
   }
@@ -595,11 +641,42 @@ const Evts = (() => {
     document.getElementById('eLieu').value     = "Librairie L'Esprit Large";
     document.getElementById('eDesc').value     = '';
     document.getElementById('eSpecial').checked   = false;
-    document.getElementById('eRecurrent').checked = false;
     document.getElementById('eFermeture').checked = false;
+    document.getElementById('rFreq').value     = '';
+    document.getElementById('rJusquau').value  = '';
+    document.getElementById('recurPreview').innerHTML = '<em>Choisissez une fréquence et une date de fin…</em>';
+    document.getElementById('recurDetails').removeAttribute('open');
     document.getElementById('eDel').style.display = 'none';
     document.getElementById('eTitre').focus();
     renderList();
+  }
+
+  function genererDates(dateDebut, freq, dateFinStr) {
+    const dates = [];
+    const fin = new Date(dateFinStr);
+    let cur = new Date(dateDebut);
+    // Inclure la date de départ
+    while (cur <= fin) {
+      dates.push(cur.toISOString().split('T')[0]);
+      if (freq === 'weekly')    cur.setDate(cur.getDate() + 7);
+      else if (freq === 'biweekly') cur.setDate(cur.getDate() + 14);
+      else if (freq === 'monthly')  cur.setMonth(cur.getMonth() + 1);
+      else break;
+      if (dates.length > 200) break; // sécurité
+    }
+    return dates;
+  }
+
+  function updatePreview() {
+    const date  = document.getElementById('eDate').value;
+    const freq  = document.getElementById('rFreq').value;
+    const fin   = document.getElementById('rJusquau').value;
+    const el    = document.getElementById('recurPreview');
+    if (!date || !freq || !fin) { el.innerHTML = '<em>Choisissez une fréquence et une date de fin…</em>'; return; }
+    const dates = genererDates(date, freq, fin);
+    if (!dates.length) { el.innerHTML = '<em>Aucune date générée — vérifiez la date de fin.</em>'; return; }
+    const fmt = d => new Date(d).toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long'});
+    el.innerHTML = dates.map(d => `• ${fmt(d)}`).join('<br/>') + `<br/><strong style="color:var(--wood)">${dates.length} occurrence(s)</strong>`;
   }
 
   async function sauvegarder() {
@@ -607,24 +684,44 @@ const Evts = (() => {
     const date  = document.getElementById('eDate').value;
     if (!titre) { toast('⚠️ Le titre est obligatoire.'); return; }
     if (!date)  { toast('⚠️ La date est obligatoire.'); return; }
-    const evt = {
-      id:        idx !== null ? items[idx].id : Date.now().toString(),
-      titre,
-      date,
+
+    const base = {
       time:      document.getElementById('eTime').value.trim(),
       type:      document.getElementById('eType').value,
       lieu:      document.getElementById('eLieu').value.trim(),
       desc:      document.getElementById('eDesc').value.trim(),
       affiche:   document.getElementById('eAffiche').value.trim(),
       special:   document.getElementById('eSpecial').checked,
-      recurrent: document.getElementById('eRecurrent').checked,
       fermeture: document.getElementById('eFermeture').checked,
     };
-    if (idx !== null) items[idx] = evt; else items.push(evt);
-    items.sort((a,b) => new Date(a.date) - new Date(b.date));
-    idx = items.findIndex(e => e.id === evt.id);
-    const newSha = await ghPut('evenements.json', { mis_a_jour: new Date().toISOString(), evenements: items }, sha, `📅 ${titre}`);
-    if (newSha) { sha = newSha; toast('✅ Événement publié !'); renderList(); }
+
+    const freq  = document.getElementById('rFreq').value;
+    const fin   = document.getElementById('rJusquau').value;
+    const isRecur = idx === null && freq && fin; // récurrence seulement à la création
+
+    if (isRecur) {
+      const dates = genererDates(date, freq, fin);
+      if (!dates.length) { toast('⚠️ Aucune date générée. Vérifiez la date de fin.'); return; }
+      const nouveaux = dates.map((d, i) => ({
+        ...base, id: (Date.now() + i).toString(),
+        titre, date: d, recurrent: true,
+      }));
+      nouveaux.forEach(e => items.push(e));
+      items.sort((a,b) => new Date(a.date) - new Date(b.date));
+      const newSha = await ghPut('evenements.json', { mis_a_jour: new Date().toISOString(), evenements: items }, sha, `📅 ${titre} (×${dates.length})`);
+      if (newSha) { sha = newSha; toast(`✅ ${dates.length} occurrences créées !`); renderList(); nouveau(); }
+    } else {
+      const evt = {
+        ...base,
+        id:        idx !== null ? items[idx].id : Date.now().toString(),
+        titre, date, recurrent: false,
+      };
+      if (idx !== null) items[idx] = evt; else items.push(evt);
+      items.sort((a,b) => new Date(a.date) - new Date(b.date));
+      idx = items.findIndex(e => e.id === evt.id);
+      const newSha = await ghPut('evenements.json', { mis_a_jour: new Date().toISOString(), evenements: items }, sha, `📅 ${titre}`);
+      if (newSha) { sha = newSha; toast('✅ Événement publié !'); renderList(); }
+    }
   }
 
   async function supprimer() {
@@ -635,7 +732,7 @@ const Evts = (() => {
     if (newSha !== false) { sha = newSha; toast('🗑️ Événement supprimé.'); nouveau(); }
   }
 
-  return { charger, select, nouveau, sauvegarder, supprimer };
+  return { charger, select, nouveau, sauvegarder, supprimer, updatePreview };
 })();
 
 // ── UTILS ─────────────────────────────────────────────
