@@ -206,7 +206,7 @@
     /* ── BOOK GRID ── */
     .book-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      grid-template-columns: repeat(5, 1fr);
       gap: 2rem;
     }
     .book-card {
@@ -713,11 +713,11 @@
   <div class="section-header">
     <div>
       <h2 class="section-title">Notre catalogue</h2>
-      <p class="section-sub">Stock mis à jour en temps réel</p>
+      <p class="section-sub">Une sélection de nos livres en stock</p>
     </div>
     <a href="catalogue.html" class="see-all" style="text-decoration:none;">Tout voir →</a>
   </div>
-  <div class="book-grid" id="bookGrid" style="grid-template-columns:repeat(auto-fill,minmax(160px,1fr));"></div>
+  <div class="book-grid" id="bookGrid" style="grid-template-columns:repeat(5,1fr);gap:1.2rem;"></div>
   <div style="text-align:center;margin-top:2rem;">
     <a href="catalogue.html" style="display:inline-block;font-family:'Raleway',sans-serif;font-size:0.8rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;background:var(--wood);color:var(--cream);padding:0.85rem 2.5rem;border-radius:2px;text-decoration:none;transition:background 0.2s;" onmouseover="this.style.background='var(--wood-dark)'" onmouseout="this.style.background='var(--wood)'">Explorer tout le catalogue →</a>
   </div>
@@ -952,12 +952,13 @@ async function chargerStock() {
     }));
   } catch(e) {
     grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;font-style:italic;color:var(--ink-soft);padding:2rem 0;">Le catalogue sera bientôt disponible.</p>';
+    // Ne pas bloquer le reste de la page
     return;
   }
-  // Page d'accueil : 6 livres avec couverture, en stock
-  const avecCouv = BOOKS.filter(b => b.stock > 0 && b.couverture);
-  const apercu = avecCouv.sort(() => Math.random() - 0.5).slice(0, 6);
-  renderBooks(apercu);
+  // Page d'accueil : 1 ligne fixe = 5 livres aléatoires en stock (avec ou sans couverture)
+  const enStock = BOOKS.filter(b => b.stock > 0);
+  const apercu = enStock.sort(() => Math.random() - 0.5).slice(0, 5);
+  renderBooks(apercu, true); // true = mode accueil (1 ligne)
   chargerCoups();
 }
 
@@ -1130,13 +1131,15 @@ function subscribeNewsletter() {
 }
 
 /* ── RENDER BOOKS ── */
-function renderBooks(books) {
+function renderBooks(books, modeAccueil) {
   const grid = document.getElementById('bookGrid');
   if (books.length === 0) {
     grid.innerHTML = `<p style="font-style:italic;color:var(--ink-soft);grid-column:1/-1;padding:2rem 0;">Aucun livre trouvé pour cette recherche.</p>`;
     return;
   }
-  grid.innerHTML = books.slice(0, 60).map((b, i) => {
+  const liste = modeAccueil ? books.slice(0, 5) : books.slice(0, 60);
+  if (modeAccueil) grid.style.gridTemplateColumns = 'repeat(5, 1fr)';
+  grid.innerHTML = liste.map((b, i) => {
     const sClass = b.stock > 0 ? 'stock-ok' : 'stock-out';
     const sLabel = b.stock > 0 ? 'En stock' : 'À la commande';
     const badge = b.fav ? '<span class="book-badge badge-fav">❤ Coup de cœur</span>' :
@@ -1162,7 +1165,7 @@ function renderBooks(books) {
         <button class="btn-reserve ${btnClass}" onclick="openReserve(${b.id})">${btnLabel}</button>
       </div>
     </div>`;
-  }).join('') + (books.length > 60 ? `<p style="grid-column:1/-1;text-align:center;font-style:italic;color:var(--ink-soft);padding:1rem 0;">${books.length - 60} autres résultats — affinez votre recherche pour les voir.</p>` : '');
+  }).join('') + (!modeAccueil && books.length > 60 ? `<p style="grid-column:1/-1;text-align:center;font-style:italic;color:var(--ink-soft);padding:1rem 0;">${books.length - 60} autres résultats — affinez votre recherche pour les voir.</p>` : '');
 }
 
 /* ── FILTER ── */
@@ -1301,8 +1304,60 @@ function stockClass(qte) {
 /* ── INIT ── */
 window.addEventListener('DOMContentLoaded', function() {
   chargerStock();
-  renderEvents();
+  chargerEvenementsAccueil();
 });
+
+async function chargerEvenementsAccueil() {
+  const list = document.getElementById('eventList');
+  if (!list) return;
+  try {
+    const r = await fetch('evenements.json?t=' + Date.now());
+    if (!r.ok) throw new Error();
+    const data = await r.json();
+    const now = new Date();
+    const moisCourant = now.getMonth() + 1;
+    const anneeCourante = now.getFullYear();
+
+    // Filtrer les événements du mois en cours
+    const evts = (data.evenements || []).filter(e => {
+      const parts = (e.date || '').split('-');
+      return parseInt(parts[1]) === moisCourant && parseInt(parts[0]) === anneeCourante;
+    });
+
+    const MOIS = ['','Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+
+    if (!evts.length) {
+      list.innerHTML = `<p style="font-family:'Lora',serif;font-style:italic;color:var(--ink-soft);padding:1rem 0;">Aucun événement ce mois-ci. <a href="evenements.html" style="color:var(--wood);">Voir le calendrier →</a></p>`;
+      return;
+    }
+
+    list.innerHTML = evts.map(e => {
+      const parts = (e.date || '').split('-');
+      const jour  = parseInt(parts[2]);
+      const mois  = MOIS[parseInt(parts[1])] || '';
+      return `
+      <div class="event-card${e.special?' event-special':''}${e.fermeture?' event-fermeture':''}">
+        <div class="event-date" style="${e.special?'background:var(--amber);':e.fermeture?'background:#888;':''}">
+          <div class="event-day">${jour}</div>
+          <div class="event-month">${mois}</div>
+          <div class="event-month" style="font-size:0.6rem;opacity:0.7;">${parts[0]}</div>
+        </div>
+        <div class="event-info">
+          <div class="event-type">${e.type||''}${e.recurrent?' · <span style="font-style:italic;font-weight:400;">Récurrent</span>':''}</div>
+          <div class="event-title">${e.titre||''}</div>
+          <div class="event-desc">${e.desc||''}
+            <br/><span style="font-family:'Raleway',sans-serif;font-size:0.72rem;color:var(--wood);font-weight:600;margin-top:0.3rem;display:inline-block;">🕐 ${e.time||''}${e.lieu?' · 📍 '+e.lieu:''}</span>
+          </div>
+          ${e.affiche?`<div style="margin-top:0.6rem;"><img src="evenements/${e.affiche}" alt="Affiche" style="max-height:110px;border-radius:3px;"/></div>`:''}
+        </div>
+        ${e.fermeture?'':`<button class="btn-event" onclick="openEventModal('${(e.titre||'').replace(/'/g,"\'")}')">Je m'inscris</button>`}
+      </div>`;
+    }).join('');
+  } catch(err) {
+    // Fallback sur le tableau EVENTS codé en dur
+    renderEvents();
+  }
+}
 </script>
 </body>
 </html>

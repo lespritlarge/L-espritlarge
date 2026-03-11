@@ -155,7 +155,6 @@ details[open] .rblock summary::before{transform:rotate(90deg);}
     <button class="tab active" onclick="switchTab('blog',this)">📝 Blog</button>
     <button class="tab" onclick="switchTab('events',this)">📅 Événements</button>
     <button class="tab" onclick="switchTab('coups',this)">❤️ Coups de cœur</button>
-    <button class="tab" onclick="switchTab('coups',this)">❤️ Coups de cœur</button>
   </div>
 
   <div class="body">
@@ -256,47 +255,6 @@ details[open] .rblock summary::before{transform:rotate(90deg);}
             <button class="btn-del" id="eDel" onclick="Evts.supprimer()" style="display:none">Supprimer</button>
           </div>
           <p class="fhint">💡 Sauvegardé dans <strong>evenements.json</strong> sur GitHub.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- COUPS DE CŒUR -->
-    <div class="panel" id="panel-coups">
-      <div class="split">
-        <div class="slist">
-          <div class="shead"><h3>Coups de cœur</h3><button class="btn-new" onclick="Coups.nouveau()">+ Ajouter</button></div>
-          <div class="ilist" id="coupsList"><div class="lempty">Chargement…</div></div>
-        </div>
-        <div class="sform">
-          <div class="fhead" id="cHead">Ajouter un coup de cœur</div>
-
-          <div class="f"><label>EAN (code-barres du livre) *</label>
-            <input type="text" id="cEan" placeholder="9782…" maxlength="13" oninput="Coups.rechercher()"/>
-            <small>Saisissez l'EAN — le livre sera cherché dans stock.json</small>
-          </div>
-
-          <!-- Aperçu du livre trouvé -->
-          <div id="cApercu" style="display:none;background:var(--cream);border:1.5px solid rgba(92,26,26,.15);border-radius:4px;padding:1rem;margin-bottom:1rem;display:none;flex-direction:row;gap:1rem;align-items:flex-start;">
-            <img id="cCouv" src="" alt="" style="width:60px;height:80px;object-fit:cover;border-radius:2px;flex-shrink:0;" onerror="this.style.display='none'"/>
-            <div>
-              <div id="cTitreApercu" style="font-family:'Lora',serif;font-size:.9rem;font-weight:500;color:var(--ink);"></div>
-              <div id="cAuteurApercu" style="font-size:.78rem;color:var(--soft);margin-top:.2rem;"></div>
-              <div id="cPrixApercu" style="font-family:'Raleway',sans-serif;font-size:.78rem;color:var(--wood);margin-top:.2rem;font-weight:700;"></div>
-            </div>
-          </div>
-
-          <div class="f"><label>Libraire qui recommande</label>
-            <input type="text" id="cLibraire" placeholder="Ex : Adel, Camille, L'équipe…"/>
-          </div>
-          <div class="f"><label>Citation / Coup de cœur *</label>
-            <textarea id="cCitation" style="min-height:100px" placeholder="Pourquoi ce livre vous a touché…"></textarea>
-          </div>
-
-          <div class="fbtns">
-            <button class="btn-save" onclick="Coups.sauvegarder()">💾 Publier le coup de cœur</button>
-            <button class="btn-del" id="cDel" onclick="Coups.supprimer()" style="display:none">Supprimer</button>
-          </div>
-          <p class="fhint">💡 Sauvegardé dans <strong>coups_de_coeur.json</strong> sur GitHub.</p>
         </div>
       </div>
     </div>
@@ -746,119 +704,6 @@ function toast(msg) {
 //  COUPS DE CŒUR
 // ══════════════════════════════════════════
 var Coups = (() => {
-  let items = [], idx = null, stockCache = null;
-
-  async function chargerStock() {
-    if (stockCache) return stockCache;
-    try {
-      const r = await fetch('https://raw.githubusercontent.com/' + GH_OWNER + '/' + GH_REPO + '/main/stock.json?t=' + Date.now());
-      if (r.ok) stockCache = await r.json();
-    } catch(_) {}
-    return stockCache;
-  }
-
-  async function charger() {
-    document.getElementById('coupsList').innerHTML = '<div class="lempty">⏳ Chargement…</div>';
-    try {
-      const { data } = await ghRead('coups_de_coeur.json');
-      items = data ? (data.coups || []) : [];
-    } catch(e) { items = []; }
-    renderList();
-  }
-
-  function renderList() {
-    const el = document.getElementById('coupsList');
-    if (!items.length) { el.innerHTML = '<div class="lempty">Aucun coup de cœur.<br/>Ajoutez le premier !</div>'; return; }
-    el.innerHTML = items.map((c,i) => `
-      <div class="li ${i===idx?'active':''}" onclick="Coups.select(${i})">
-        <div class="li-dot gold"></div>
-        <div>
-          <div class="li-t">${c.titre||c.ean}</div>
-          <div class="li-m">${c.libraire ? '— '+c.libraire : ''}</div>
-        </div>
-      </div>`).join('');
-  }
-
-  async function rechercher() {
-    const ean = document.getElementById('cEan').value.trim();
-    const apercu = document.getElementById('cApercu');
-    if (ean.length < 10) { apercu.style.display = 'none'; return; }
-    const stock = await chargerStock();
-    if (!stock) return;
-    const livre = (stock.livres || []).find(b => b.ean === ean);
-    if (livre) {
-      document.getElementById('cCouv').src = livre.couverture || '';
-      document.getElementById('cTitreApercu').textContent = livre.titre || '';
-      document.getElementById('cAuteurApercu').textContent = livre.auteur || '';
-      document.getElementById('cPrixApercu').textContent = livre.prix || '';
-      apercu.style.display = 'flex';
-    } else {
-      apercu.style.display = 'none';
-    }
-  }
-
-  function select(i) {
-    idx = i; const c = items[i];
-    document.getElementById('cHead').textContent = 'Modifier le coup de cœur';
-    document.getElementById('cEan').value      = c.ean       || '';
-    document.getElementById('cLibraire').value = c.libraire  || '';
-    document.getElementById('cCitation').value = c.citation  || '';
-    document.getElementById('cDel').style.display = 'inline-block';
-    rechercher();
-    renderList();
-  }
-
-  function nouveau() {
-    idx = null;
-    document.getElementById('cHead').textContent = 'Ajouter un coup de cœur';
-    ['cEan','cLibraire','cCitation'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('cApercu').style.display = 'none';
-    document.getElementById('cDel').style.display = 'none';
-    document.getElementById('cEan').focus();
-    renderList();
-  }
-
-  async function sauvegarder() {
-    const ean      = document.getElementById('cEan').value.trim();
-    const citation = document.getElementById('cCitation').value.trim();
-    if (!ean)      { toast('⚠️ L'EAN est obligatoire.'); return; }
-    if (!citation) { toast('⚠️ La citation est obligatoire.'); return; }
-
-    // Récupérer infos du livre depuis stock.json
-    const stock  = await chargerStock();
-    const livre  = stock ? (stock.livres || []).find(b => b.ean === ean) : null;
-
-    const coup = {
-      id:        idx !== null ? items[idx].id : Date.now().toString(),
-      ean,
-      titre:     livre?.titre   || '',
-      auteur:    livre?.auteur  || '',
-      couverture:livre?.couverture || '',
-      prix:      livre?.prix    || '',
-      libraire:  document.getElementById('cLibraire').value.trim(),
-      citation,
-    };
-
-    if (idx !== null) items[idx] = coup; else items.unshift(coup);
-    const ok = await ghWrite('coups_de_coeur.json', { mis_a_jour: new Date().toISOString(), coups: items }, '❤️ Coup de cœur : ' + (coup.titre || ean));
-    if (ok) { toast('✅ Coup de cœur publié !'); renderList(); }
-  }
-
-  async function supprimer() {
-    if (idx === null) return;
-    if (!confirm('Supprimer ce coup de cœur ?')) return;
-    items.splice(idx, 1); idx = null;
-    const ok = await ghWrite('coups_de_coeur.json', { mis_a_jour: new Date().toISOString(), coups: items }, '🗑️ Suppression coup de cœur');
-    if (ok) { toast('🗑️ Supprimé.'); nouveau(); }
-  }
-
-  return { charger, select, nouveau, sauvegarder, supprimer, rechercher };
-})();
-
-// ══════════════════════════════════════════
-//  COUPS DE CŒUR
-// ══════════════════════════════════════════
-var Coups = (() => {
   let items = [];
 
   async function charger() {
@@ -872,7 +717,7 @@ var Coups = (() => {
 
   function renderList() {
     const el = document.getElementById('coupsList');
-    if (!items.length) { el.innerHTML = '<p style="font-family:'Lora',serif;font-style:italic;font-size:.85rem;color:var(--soft);">Aucun coup de cœur pour l'instant.</p>'; return; }
+    if (!items.length) { el.innerHTML = '<p style="font-family:Lora,serif;font-style:italic;font-size:.85rem;color:var(--soft);">Aucun coup de c\u0153ur pour l\u2019instant.</p>'; return; }
     el.innerHTML = items.map((c, i) => `
       <div style="display:flex;align-items:center;gap:1rem;padding:.8rem;background:var(--cream);border-radius:4px;margin-bottom:.5rem;border:1px solid rgba(92,26,26,.1);">
         ${c.couverture ? `<img src="${c.couverture}" style="width:40px;height:55px;object-fit:cover;border-radius:2px;flex-shrink:0;" onerror="this.style.display='none'"/>` : '<span style="font-size:1.5rem;flex-shrink:0;">📖</span>'}
