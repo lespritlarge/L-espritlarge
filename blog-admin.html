@@ -458,36 +458,38 @@ function switchTab(name, el) {
 
 async function ghGet(file) {
   const token = getToken();
-  const headers = { 'Accept': 'application/vnd.github+json' };
-  if (token) headers['Authorization'] = `Bearer ${token}`;
 
-  const r = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${file}`, { headers });
+  // ── Étape 1 : lecture publique (raw) pour avoir les données rapidement ──
+  // Fonctionne toujours pour un dépôt public, sans token
+  let publicData = null;
+  try {
+    const r = await fetch(`https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/main/${file}?t=${Date.now()}`);
+    if (r.ok) publicData = await r.json();
+  } catch(_) {}
 
-  if (r.status === 404) return { data: null, sha: null };
-
-  if (r.status === 401 || r.status === 403) {
-    // Token manquant ou invalide — fallback lecture publique (pas de SHA)
-    console.warn(`ghGet ${file} : token invalide (${r.status}), fallback lecture publique`);
+  // ── Étape 2 : API GitHub pour avoir le SHA (nécessaire pour écrire) ──
+  // Ne tente l'API que si on a un token
+  if (token) {
     try {
-      const r2 = await fetch(`https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/main/${file}?t=${Date.now()}`);
-      if (r2.ok) { return { data: await r2.json(), sha: null }; }
+      const r = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${file}`, {
+        headers: { 'Accept': 'application/vnd.github+json', 'Authorization': `Bearer ${token}` }
+      });
+      if (r.ok) {
+        const d = await r.json();
+        const data = d.content
+          ? JSON.parse(atob(d.content.replace(/\n/g,'')))
+          : publicData; // fallback si contenu absent
+        return { data, sha: d.sha };
+      }
+      if (r.status === 401 || r.status === 403) {
+        toast('⚠️ Token GitHub invalide ou expiré — vous pouvez lire mais pas publier. Reconfigurez le token.');
+      }
     } catch(_) {}
-    toast(`⚠️ Token GitHub manquant ou invalide. Configurez-le en haut de la page.`);
-    return { data: null, sha: null };
   }
 
-  if (!r.ok) {
-    toast(`⚠️ Erreur chargement ${file} : ${r.status}`);
-    throw new Error(r.status);
-  }
-
-  const d = await r.json();
-  // Sécurité : content peut être absent si le fichier est trop grand (>1Mo)
-  if (!d.content) {
-    toast(`⚠️ Fichier ${file} trop volumineux pour l'API GitHub.`);
-    return { data: null, sha: d.sha };
-  }
-  return { data: JSON.parse(atob(d.content.replace(/\n/g,''))), sha: d.sha };
+  // Pas de token ou API échouée → données publiques sans SHA (lecture seule)
+  if (!token) toast('ℹ️ Token GitHub non configuré — mode lecture seule. Configurez-le pour pouvoir publier.');
+  return { data: publicData, sha: null };
 }
 
 async function ghPut(file, content, _sha, message) {
@@ -535,8 +537,6 @@ const Blog = (() => {
       items.sort((a,b) => new Date(b.date) - new Date(a.date));
     } catch(e) {
       items = [];
-      document.getElementById('blogList').innerHTML = '<div class="list-empty" style="color:#c0392b;">❌ Erreur de chargement.<br/>Vérifiez votre token GitHub.</div>';
-      return;
     }
     renderList();
   }
@@ -625,8 +625,6 @@ const Evts = (() => {
       items.sort((a,b) => new Date(a.date) - new Date(b.date));
     } catch(e) {
       items = [];
-      document.getElementById('evtList').innerHTML = '<div class="list-empty" style="color:#c0392b;">❌ Erreur de chargement.<br/>Vérifiez votre token GitHub.</div>';
-      return;
     }
     renderList();
   }
