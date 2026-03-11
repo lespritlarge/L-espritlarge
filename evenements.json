@@ -1,5 +1,5 @@
 {
-  "mis_a_jour": "2026-03-11T15:08:33.358Z",
+  "mis_a_jour": "2026-03-11T15:12:56.948Z",
   "evenements": [
     {
       "titre": "Les lectures d'Adel",
@@ -15,6 +15,19 @@
       "recurrent": false
     },
     {
+      "titre": "Les lectures d'Adel",
+      "time": "10h30-12h",
+      "type": "Lecture hebdo 📖",
+      "lieu": "Librairie L'Esprit Large",
+      "desc": "Lectures d'albums jeunesses pour petits et grands enfants...",
+      "affiche": "Lectures_Adel.png",
+      "special": false,
+      "fermeture": false,
+      "id": "mmm6hm5w_r0",
+      "date": "2026-03-18",
+      "recurrent": true
+    },
+    {
       "id": "1742601600000",
       "titre": "Rencontre avec Séverine Cressan",
       "date": "2026-03-24",
@@ -26,6 +39,19 @@
       "special": true,
       "recurrent": false,
       "fermeture": false
+    },
+    {
+      "titre": "Les lectures d'Adel",
+      "time": "10h30-12h",
+      "type": "Lecture hebdo 📖",
+      "lieu": "Librairie L'Esprit Large",
+      "desc": "Lectures d'albums jeunesses pour petits et grands enfants...",
+      "affiche": "Lectures_Adel.png",
+      "special": false,
+      "fermeture": false,
+      "id": "mmm6hm5w_r1",
+      "date": "2026-03-25",
+      "recurrent": true
     },
     {
       "id": "1742774400000",
@@ -80,6 +106,32 @@
       "recurrent": false
     },
     {
+      "titre": "Les lectures d'Adel",
+      "time": "10h30-12h",
+      "type": "Lecture hebdo 📖",
+      "lieu": "Librairie L'Esprit Large",
+      "desc": "Lectures d'albums jeunesses pour petits et grands enfants...",
+      "affiche": "Lectures_Adel.png",
+      "special": false,
+      "fermeture": false,
+      "id": "mmm6hm5w_r2",
+      "date": "2026-04-01",
+      "recurrent": true
+    },
+    {
+      "titre": "Les lectures d'Adel",
+      "time": "10h30-12h",
+      "type": "Lecture hebdo 📖",
+      "lieu": "Librairie L'Esprit Large",
+      "desc": "Lectures d'albums jeunesses pour petits et grands enfants...",
+      "affiche": "Lectures_Adel.png",
+      "special": false,
+      "fermeture": false,
+      "id": "mmm6hm5w_r3",
+      "date": "2026-04-08",
+      "recurrent": true
+    },
+    {
       "titre": "Fête de la librairie indépendante !",
       "time": "Toute la journée",
       "type": "Autre",
@@ -91,6 +143,45 @@
       "id": "1773234352126",
       "date": "2026-04-15",
       "recurrent": false
+    },
+    {
+      "titre": "Les lectures d'Adel",
+      "time": "10h30-12h",
+      "type": "Lecture hebdo 📖",
+      "lieu": "Librairie L'Esprit Large",
+      "desc": "Lectures d'albums jeunesses pour petits et grands enfants...",
+      "affiche": "Lectures_Adel.png",
+      "special": false,
+      "fermeture": false,
+      "id": "mmm6hm5w_r4",
+      "date": "2026-04-15",
+      "recurrent": true
+    },
+    {
+      "titre": "Les lectures d'Adel",
+      "time": "10h30-12h",
+      "type": "Lecture hebdo 📖",
+      "lieu": "Librairie L'Esprit Large",
+      "desc": "Lectures d'albums jeunesses pour petits et grands enfants...",
+      "affiche": "Lectures_Adel.png",
+      "special": false,
+      "fermeture": false,
+      "id": "mmm6hm5w_r5",
+      "date": "2026-04-22",
+      "recurrent": true
+    },
+    {
+      "titre": "Les lectures d'Adel",
+      "time": "10h30-12h",
+      "type": "Lecture hebdo 📖",
+      "lieu": "Librairie L'Esprit Large",
+      "desc": "Lectures d'albums jeunesses pour petits et grands enfants...",
+      "affiche": "Lectures_Adel.png",
+      "special": false,
+      "fermeture": false,
+      "id": "mmm6hm5w_r6",
+      "date": "2026-04-29",
+      "recurrent": true
     },
     {
       "id": "1745971200000",
@@ -106,6 +197,19 @@
       "fermeture": false
     },
     {
+      "titre": "Les lectures d'Adel",
+      "time": "10h30-12h",
+      "type": "Lecture hebdo 📖",
+      "lieu": "Librairie L'Esprit Large",
+      "desc": "Lectures d'albums jeunesses pour petits et grands enfants...",
+      "affiche": "Lectures_Adel.png",
+      "special": false,
+      "fermeture": false,
+      "id": "mmm6hm5w_r7",
+      "date": "2026-05-06",
+      "recurrent": true
+    },
+    {
       "id": "1747008000000",
       "titre": "Les Madeleines des libraires",
       "date": "2026-05-12",
@@ -117,6 +221,32 @@
       "special": false,
       "recurrent": false,
       "fermeture": false
+    },
+    {
+      "titre": "Les lectures d'Adel",
+      "time": "10h30-12h",
+      "type": "Lecture hebdo 📖",
+      "lieu": "Librairie L'Esprit Large",
+      "desc": "Lectures d'albums jeunesses pour petits et grands enfants...",
+      "affiche": "Lectures_Adel.png",
+      "special": false,
+      "fermeture": false,
+      "id": "mmm6hm5w_r8",
+      "date": "2026-05-13",
+      "recurrent": true
+    },
+    {
+      "titre": "Les lectures d'Adel",
+      "time": "10h30-12h",
+      "type": "Lecture hebdo 📖",
+      "lieu": "Librairie L'Esprit Large",
+      "desc": "Lectures d'albums jeunesses pour petits et grands enfants...",
+      "affiche": "Lectures_Adel.png",
+      "special": false,
+      "fermeture": false,
+      "id": "mmm6hm5w_r9",
+      "date": "2026-05-20",
+      "recurrent": true
     },
     {
       "id": "1748131200000",
@@ -132,6 +262,19 @@
       "fermeture": false
     },
     {
+      "titre": "Les lectures d'Adel",
+      "time": "10h30-12h",
+      "type": "Lecture hebdo 📖",
+      "lieu": "Librairie L'Esprit Large",
+      "desc": "Lectures d'albums jeunesses pour petits et grands enfants...",
+      "affiche": "Lectures_Adel.png",
+      "special": false,
+      "fermeture": false,
+      "id": "mmm6hm5w_r10",
+      "date": "2026-05-27",
+      "recurrent": true
+    },
+    {
       "id": "1749340800000",
       "titre": "Rencontre autour de \"Première Vague\"",
       "date": "2026-06-02",
@@ -143,6 +286,32 @@
       "special": false,
       "recurrent": false,
       "fermeture": false
+    },
+    {
+      "titre": "Les lectures d'Adel",
+      "time": "10h30-12h",
+      "type": "Lecture hebdo 📖",
+      "lieu": "Librairie L'Esprit Large",
+      "desc": "Lectures d'albums jeunesses pour petits et grands enfants...",
+      "affiche": "Lectures_Adel.png",
+      "special": false,
+      "fermeture": false,
+      "id": "mmm6hm5w_r11",
+      "date": "2026-06-03",
+      "recurrent": true
+    },
+    {
+      "titre": "Les lectures d'Adel",
+      "time": "10h30-12h",
+      "type": "Lecture hebdo 📖",
+      "lieu": "Librairie L'Esprit Large",
+      "desc": "Lectures d'albums jeunesses pour petits et grands enfants...",
+      "affiche": "Lectures_Adel.png",
+      "special": false,
+      "fermeture": false,
+      "id": "mmm6hm5w_r12",
+      "date": "2026-06-10",
+      "recurrent": true
     },
     {
       "id": "1749772800000",
@@ -158,6 +327,32 @@
       "fermeture": false
     },
     {
+      "titre": "Les lectures d'Adel",
+      "time": "10h30-12h",
+      "type": "Lecture hebdo 📖",
+      "lieu": "Librairie L'Esprit Large",
+      "desc": "Lectures d'albums jeunesses pour petits et grands enfants...",
+      "affiche": "Lectures_Adel.png",
+      "special": false,
+      "fermeture": false,
+      "id": "mmm6hm5w_r13",
+      "date": "2026-06-17",
+      "recurrent": true
+    },
+    {
+      "titre": "Les lectures d'Adel",
+      "time": "10h30-12h",
+      "type": "Lecture hebdo 📖",
+      "lieu": "Librairie L'Esprit Large",
+      "desc": "Lectures d'albums jeunesses pour petits et grands enfants...",
+      "affiche": "Lectures_Adel.png",
+      "special": false,
+      "fermeture": false,
+      "id": "mmm6hm5w_r14",
+      "date": "2026-06-24",
+      "recurrent": true
+    },
+    {
       "id": "1750896000000",
       "titre": "Échanges autour de la littéature allemande",
       "date": "2026-06-25",
@@ -169,6 +364,123 @@
       "special": false,
       "recurrent": false,
       "fermeture": false
+    },
+    {
+      "titre": "Les lectures d'Adel",
+      "time": "10h30-12h",
+      "type": "Lecture hebdo 📖",
+      "lieu": "Librairie L'Esprit Large",
+      "desc": "Lectures d'albums jeunesses pour petits et grands enfants...",
+      "affiche": "Lectures_Adel.png",
+      "special": false,
+      "fermeture": false,
+      "id": "mmm6hm5w_r15",
+      "date": "2026-07-01",
+      "recurrent": true
+    },
+    {
+      "titre": "Les lectures d'Adel",
+      "time": "10h30-12h",
+      "type": "Lecture hebdo 📖",
+      "lieu": "Librairie L'Esprit Large",
+      "desc": "Lectures d'albums jeunesses pour petits et grands enfants...",
+      "affiche": "Lectures_Adel.png",
+      "special": false,
+      "fermeture": false,
+      "id": "mmm6hm5w_r16",
+      "date": "2026-07-08",
+      "recurrent": true
+    },
+    {
+      "titre": "Les lectures d'Adel",
+      "time": "10h30-12h",
+      "type": "Lecture hebdo 📖",
+      "lieu": "Librairie L'Esprit Large",
+      "desc": "Lectures d'albums jeunesses pour petits et grands enfants...",
+      "affiche": "Lectures_Adel.png",
+      "special": false,
+      "fermeture": false,
+      "id": "mmm6hm5w_r17",
+      "date": "2026-07-15",
+      "recurrent": true
+    },
+    {
+      "titre": "Les lectures d'Adel",
+      "time": "10h30-12h",
+      "type": "Lecture hebdo 📖",
+      "lieu": "Librairie L'Esprit Large",
+      "desc": "Lectures d'albums jeunesses pour petits et grands enfants...",
+      "affiche": "Lectures_Adel.png",
+      "special": false,
+      "fermeture": false,
+      "id": "mmm6hm5w_r18",
+      "date": "2026-07-22",
+      "recurrent": true
+    },
+    {
+      "titre": "Les lectures d'Adel",
+      "time": "10h30-12h",
+      "type": "Lecture hebdo 📖",
+      "lieu": "Librairie L'Esprit Large",
+      "desc": "Lectures d'albums jeunesses pour petits et grands enfants...",
+      "affiche": "Lectures_Adel.png",
+      "special": false,
+      "fermeture": false,
+      "id": "mmm6hm5w_r19",
+      "date": "2026-07-29",
+      "recurrent": true
+    },
+    {
+      "titre": "Les lectures d'Adel",
+      "time": "10h30-12h",
+      "type": "Lecture hebdo 📖",
+      "lieu": "Librairie L'Esprit Large",
+      "desc": "Lectures d'albums jeunesses pour petits et grands enfants...",
+      "affiche": "Lectures_Adel.png",
+      "special": false,
+      "fermeture": false,
+      "id": "mmm6hm5w_r20",
+      "date": "2026-08-05",
+      "recurrent": true
+    },
+    {
+      "titre": "Les lectures d'Adel",
+      "time": "10h30-12h",
+      "type": "Lecture hebdo 📖",
+      "lieu": "Librairie L'Esprit Large",
+      "desc": "Lectures d'albums jeunesses pour petits et grands enfants...",
+      "affiche": "Lectures_Adel.png",
+      "special": false,
+      "fermeture": false,
+      "id": "mmm6hm5w_r21",
+      "date": "2026-08-12",
+      "recurrent": true
+    },
+    {
+      "titre": "Les lectures d'Adel",
+      "time": "10h30-12h",
+      "type": "Lecture hebdo 📖",
+      "lieu": "Librairie L'Esprit Large",
+      "desc": "Lectures d'albums jeunesses pour petits et grands enfants...",
+      "affiche": "Lectures_Adel.png",
+      "special": false,
+      "fermeture": false,
+      "id": "mmm6hm5w_r22",
+      "date": "2026-08-19",
+      "recurrent": true
+    },
+    {
+      "titre": "Les lectures d'Adel",
+      "time": "10h30-12h",
+      "type": "Lecture hebdo 📖",
+      "lieu": "Librairie L'Esprit Large",
+      "desc": "Lectures d'albums jeunesses pour petits et grands enfants...",
+      "affiche": "Lectures_Adel.png",
+      "special": false,
+      "fermeture": false,
+      "id": "mmm6hm5w_r23",
+      "date": "2026-08-26",
+      "recurrent": true
     },
     {
       "id": "1757030400000",
