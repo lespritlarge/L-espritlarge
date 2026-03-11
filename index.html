@@ -1181,6 +1181,19 @@ function renderBooks(books, modeAccueil) {
 }
 
 /* ── FILTER ── */
+function normaliser(str) {
+  return (str||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+}
+
+function goSearch() {
+  const q = document.getElementById('searchInput').value.trim();
+  if (q) {
+    window.location.href = 'catalogue.html?q=' + encodeURIComponent(q);
+  } else {
+    window.location.href = 'catalogue.html';
+  }
+}
+
 function filterBooks() {
   const q = document.getElementById('searchInput').value.toLowerCase();
   let books = BOOKS;
