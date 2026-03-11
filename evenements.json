@@ -1,5 +1,5 @@
 {
-  "mis_a_jour": "2026-03-11T08:57:09.304Z",
+  "mis_a_jour": "2026-03-11T09:08:57.391Z",
   "evenements": [
     {
       "id": "1742601600000",
@@ -146,12 +146,12 @@
     },
     {
       "id": "1757030400000",
-      "titre": "FÃÂªte des 20 ans de la Librairie !",
+      "titre": "Fête des 20 ans de la Librairie !",
       "date": "2026-09-05",
-      "time": "ÃÂ confirmer",
-      "type": "Ã°ÂÂÂ Anniversaire",
-      "lieu": "GuÃÂ©rande",
-      "desc": "L'Esprit Large souffle ses 20 bougies ! Grande fÃÂªte avec animations, surprises, auteurs et beaucoup de joie. Tout le monde est invitÃÂ© !",
+      "time": "A confirmer",
+      "type": "",
+      "lieu": "Librairie l'esprit large",
+      "desc": "L'Esprit Large souffle ses 20 bougies ! Grande fête avec animations, surprises, auteurs et beaucoup de joie. Tout le monde est invitée !",
       "affiche": "",
       "special": true,
       "recurrent": false,
