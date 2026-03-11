@@ -942,14 +942,46 @@
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 /* ── DATA ── */
-const BOOKS = [
-  { id:1, title:"Le sigisbée ", author:"Mathilde Desaché", genre:"Littérature française", price:"18 €", stock:2, emoji:"📖", color:"#d4956a", fav:true, },
-  { id:2, title:"Les fantômes de Shearwater", author:"Charlotte McConaghy", genre:"Littérature étrangère", price:"23.90 €", stock:2, emoji:"🪞", color:"#8b9e7a", fav:true },
-  { id:3, title:"Petit pas", author:"Marion Richez", genre:"Littérature française", price:"20 €", stock:0, emoji:"🌙", color:"#5c7a9e", fav:true },
-  { id:4, title:"Karl", author:"Cyril Bonin", genre:"Bande-dessinée", price:"22 €", stock:8, emoji:"⭐", color:"#e8c96a", fav:true },
-  { id:5, title:"Mariage fantôme", author:"David Park", genre:"Littérature étrangère", price:"23 €", stock:3, emoji:"🍇", color:"#9e6a8b", fav:true },
- 
-];
+let BOOKS = [];
+
+async function chargerStock() {
+  const grid = document.getElementById('bookGrid');
+  grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;font-style:italic;color:var(--ink-soft);padding:3rem 0;">⏳ Chargement du catalogue…</p>';
+  try {
+    const r = await fetch('stock.json?t=' + Date.now());
+    if (!r.ok) throw new Error();
+    const data = await r.json();
+    BOOKS = (data.livres || []).map((b, i) => ({
+      id:       i + 1,
+      ean:      b.ean,
+      title:    b.titre,
+      author:   b.auteur,
+      editeur:  b.editeur,
+      genre:    devinerGenre(b.titre, b.auteur, b.editeur),
+      price:    b.prix || '',
+      stock:    b.quantite || 0,
+      couverture: b.couverture || '',
+      fav:      false,
+    }));
+  } catch(e) {
+    grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;font-style:italic;color:var(--ink-soft);padding:3rem 0;">Le catalogue sera bientôt disponible.</p>';
+    return;
+  }
+  filterBooks();
+  renderCoups();
+}
+
+function devinerGenre(titre, auteur, editeur) {
+  const t = (titre + ' ' + editeur).toLowerCase();
+  if (t.includes('manga') || t.includes('shonen') || t.includes('seinen')) return 'Manga';
+  if (t.includes('bande dessin') || t.includes('bd') || t.includes('comics') || t.includes('dupuis') || t.includes('dargaud') || t.includes('casterman')) return 'Bande dessinée';
+  if (t.includes('jeunesse') || t.includes('école des loisirs') || t.includes('bayard') || t.includes('gallimard jeun') || t.includes('album')) return 'Jeunesse';
+  if (t.includes('policier') || t.includes('thriller') || t.includes('crime') || t.includes('noir')) return 'Policier';
+  if (t.includes('science-fiction') || t.includes('sf ') || t.includes(' sf') || t.includes('fantasy') || t.includes('fantastique')) return 'SF / Fantasy';
+  if (t.includes('poésie') || t.includes('poeme') || t.includes('poème')) return 'Poésie';
+  if (t.includes('document') || t.includes('essai') || t.includes('histoire') || t.includes('biograph')) return 'Essai / Document';
+  return 'Littérature';
+}
 
 const EVENTS = [
   {
@@ -1095,7 +1127,7 @@ function renderBooks(books) {
     grid.innerHTML = `<p style="font-style:italic;color:var(--ink-soft);grid-column:1/-1;padding:2rem 0;">Aucun livre trouvé pour cette recherche.</p>`;
     return;
   }
-  grid.innerHTML = books.map((b, i) => {
+  grid.innerHTML = books.slice(0, 60).map((b, i) => {
     const stockClass = b.stock === 0 ? 'stock-out' : b.stock <= 2 ? 'stock-low' : 'stock-ok';
     const stockLabel = b.stock === 0 ? 'Épuisé' : b.stock <= 2 ? `Plus que ${b.stock}` : `${b.stock} en stock`;
     const badge = b.fav ? '<span class="book-badge badge-fav">❤ Coup de cœur</span>' :
@@ -1103,10 +1135,13 @@ function renderBooks(books) {
                   b.stock <= 2 ? '<span class="book-badge badge-low">Derniers exemplaires</span>' : '';
     const btnClass = b.stock > 0 ? 'available' : 'unavailable';
     const btnLabel = b.stock > 0 ? 'Réserver' : 'Indisponible';
-    return `<div class="book-card" style="animation-delay:${i*0.06}s">
-      <div class="book-cover" style="background:${b.color}22;">
+    const couv = b.couverture
+      ? `<img src="${b.couverture}" alt="${b.title}" style="width:100%;height:100%;object-fit:cover;border-radius:2px;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/><span style="display:none;font-size:2.5rem;align-items:center;justify-content:center;width:100%;height:100%;">📖</span>`
+      : `<span style="font-size:2.5rem;">📖</span>`;
+    return `<div class="book-card" style="animation-delay:${i*0.04}s">
+      <div class="book-cover" style="background:#e8e4e0;position:relative;overflow:hidden;">
         ${badge}
-        <span style="font-size:3rem">${b.emoji}</span>
+        ${couv}
       </div>
       <div class="book-info">
         <div class="book-title">${b.title}</div>
@@ -1119,7 +1154,7 @@ function renderBooks(books) {
         <button class="btn-reserve ${btnClass}" onclick="openReserve(${b.id})">${btnLabel}</button>
       </div>
     </div>`;
-  }).join('');
+  }).join('') + (books.length > 60 ? `<p style="grid-column:1/-1;text-align:center;font-style:italic;color:var(--ink-soft);padding:1rem 0;">${books.length - 60} autres résultats — affinez votre recherche pour les voir.</p>` : '');
 }
 
 /* ── FILTER ── */
@@ -1240,7 +1275,7 @@ document.getElementById('reserveModal').addEventListener('click', function(e) { 
 document.getElementById('eventModal').addEventListener('click', function(e) { if(e.target === this) closeEventModal(); });
 
 /* ── INIT ── */
-renderBooks(BOOKS);
+chargerStock();
 renderCoups();
 renderEvents();
 </script>
