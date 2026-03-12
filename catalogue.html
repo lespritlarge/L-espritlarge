@@ -121,7 +121,8 @@
     .fiche-cover-ph{width:110px;height:158px;flex-shrink:0;background:var(--warm);border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:3rem;}
     .fiche-meta{flex:1;min-width:0;}
     .fiche-titre{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:var(--wood-dark);line-height:1.3;margin-bottom:.4rem;}
-    .fiche-auteur{font-family:'Lora',serif;font-size:.9rem;font-style:italic;color:var(--ink-soft);margin-bottom:.8rem;}
+    .fiche-auteur{font-family:'Lora',serif;font-size:.9rem;font-style:italic;color:var(--ink-soft);margin-bottom:.3rem;}
+    .fiche-traducteur{font-size:.78rem;color:var(--ink-soft);font-style:italic;margin-bottom:.5rem;}
     .fiche-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem;}
     .fiche-tag{font-family:'Raleway',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.25rem .7rem;border-radius:20px;background:rgba(92,26,26,.1);color:var(--wood);}
     .fiche-prix{font-family:'Raleway',sans-serif;font-size:1rem;font-weight:700;color:var(--wood-dark);}
@@ -197,6 +198,29 @@
   <div class="filters" id="filterBtns">
     <button class="tag active" onclick="setFilter('Tous',this)">Tous</button>
   </div>
+  <div class="filters" id="filterLang" style="margin-top:.4rem;">
+    <span style="font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);margin-right:.4rem;">Langue</span>
+    <button class="tag active" onclick="setLangFilter('Tous',this)">Toutes</button>
+    <button class="tag" onclick="setLangFilter('Français',this)">Français</button>
+    <button class="tag" onclick="setLangFilter('Anglais',this)">Anglais</button>
+    <button class="tag" onclick="setLangFilter('Autre',this)">Autre</button>
+  </div>
+  <div class="filters" style="margin-top:.4rem;">
+    <span style="font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);margin-right:.4rem;">Dispo</span>
+    <button class="tag active" onclick="setDispoFilter('Tous',this)">Tous</button>
+    <button class="tag" onclick="setDispoFilter('stock',this)">En stock</button>
+    <button class="tag" onclick="setDispoFilter('commande',this)">Sur commande</button>
+  </div>
+  <div style="display:flex;align-items:center;gap:.5rem;margin-top:.5rem;">
+    <span style="font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);">Trier par</span>
+    <select id="sortSelect" onchange="setSort(this.value)" style="font-family:'Raleway',sans-serif;font-size:.75rem;border:1px solid var(--wood-light);border-radius:3px;padding:.25rem .5rem;background:var(--cream);color:var(--ink);cursor:pointer;">
+      <option value="nouveautes">Nouveautés d'abord</option>
+      <option value="titre">Titre A→Z</option>
+      <option value="auteur">Auteur A→Z</option>
+      <option value="prix_asc">Prix croissant</option>
+      <option value="prix_desc">Prix décroissant</option>
+    </select>
+  </div>
   <span class="results-count" id="resultsCount"></span>
 </div>
 
@@ -228,37 +252,30 @@
 <script>
 let BOOKS = [];
 let filtered = [];
-let currentFilter = 'Tous';
+let currentFilter      = 'Tous';
+let currentLangFilter  = 'Tous';
+let currentDispoFilter = 'Tous';
+let currentSort        = 'nouveautes'; // défaut : nouveautés en premier
 let currentPage = 1;
 const PER_PAGE = 40;
 let reserveBook = null;
 
-// ── COUVERTURES ──────────────────────────────────────────
-// Open Library retourne une image 1x1px (~807 bytes) si pas de couverture
-// On vérifie via fetch HEAD avant d'afficher
-const OL_PLACEHOLDER_MAX = 900;
-const _coverCache = {}; // ean -> true/false
-
-async function loadCover(img) {
-  const ean = img.dataset.ean;
-  if (!ean) { showPlaceholder(img); return; }
-
-  if (_coverCache[ean] === undefined) {
-    try {
-      const r = await fetch('https://covers.openlibrary.org/b/isbn/' + ean + '-L.jpg', { method: 'HEAD' });
-      const size = parseInt(r.headers.get('content-length') || '9999');
-      _coverCache[ean] = r.ok && size > OL_PLACEHOLDER_MAX;
-    } catch(e) { _coverCache[ean] = false; }
+// ── UTILITAIRES ──────────────────────────────────────────
+const MOIS = ['','janv.','févr.','mars','avr.','mai','juin',
+              'juil.','août','sept.','oct.','nov.','déc.'];
+function formatDateParution(iso) {
+  // "2024-03" → "mars 2024"
+  const parts = iso.split('-');
+  if (parts.length >= 2) {
+    const m = parseInt(parts[1]);
+    return (MOIS[m] || parts[1]) + ' ' + parts[0];
   }
-
-  if (_coverCache[ean]) {
-    img.src = 'https://covers.openlibrary.org/b/isbn/' + ean + '-L.jpg';
-    img.onerror = function() { showPlaceholder(this); };
-  } else {
-    img.src = 'https://books.google.com/books/content?vid=ISBN' + ean + '&printsec=frontcover&img=1&zoom=1&source=gbs_api';
-    img.onerror = function() { showPlaceholder(this); };
-  }
+  return iso;
 }
+
+// ── COUVERTURES ──────────────────────────────────────────
+// Les URLs sont vérifiées en amont par verifier_couvertures.py
+// Si pas de couverture dans stock.json → emoji directement, sans requête externe
 
 function showPlaceholder(img) {
   if (img.classList.contains('fiche-cover')) {
@@ -269,9 +286,7 @@ function showPlaceholder(img) {
     if (ph) ph.style.cssText = 'display:flex;font-size:2.5rem;align-items:center;justify-content:center;width:100%;height:100%;';
   }
 }
-
 function coverFallback(img) { showPlaceholder(img); }
-function coverUrl(ean) { return ''; } // non utilisé
 
 
 
@@ -282,18 +297,22 @@ async function chargerStock() {
     const data = await r.json();
     BOOKS = (data.livres || data || []).map((b, i) => ({
       id: i + 1,
-      ean: b.ean || '',
-      title: b.titre || '',
-      author: b.auteur || '',
-      editeur: b.editeur || '',
-      annee: b.annee || '',
-      pages: b.pages || '',
-      resume: b.resume || '',
-      genre: b.genre || devinerGenre(b.titre, b.auteur, b.editeur),
-      price: (b.prix || '').replace(' EUR','€').replace(' €','€').replace('  ',' ').trim(),
-      cover: b.cover || '',
-      stock: b.stock || b.quantite || 0,
-      fav: false,
+      ean:          b.ean || '',
+      title:        b.titre || '',
+      author:       b.auteur || '',
+      traducteur:   b.traducteur || '',
+      editeur:      b.editeur || '',
+      collection:   b.collection || '',
+      annee:        b.annee || '',
+      date_parution:b.date_parution || '',
+      pages:        b.pages || '',
+      resume:       b.resume || '',
+      genre:        b.genre || devinerGenre(b.titre, b.auteur, b.editeur),
+      langue:       b.langue || 'Français',
+      price:        (b.prix || '').replace(' EUR','€').replace(' €','€').replace('  ',' ').trim(),
+      cover:        b.couverture || b.cover || '',
+      stock:        b.stock || b.quantite || 0,
+      fav:          false,
     }));
 
     // Coups de cœur
@@ -343,6 +362,22 @@ function devinerGenre(titre, auteur, editeur) {
   return 'Littérature';
 }
 
+function setLangFilter(lang, el) {
+  currentLangFilter = lang;
+  document.querySelectorAll('#filterLang .tag').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  currentPage = 1;
+  filterBooks();
+}
+
+function setDispoFilter(dispo, el) {
+  currentDispoFilter = dispo;
+  el.closest('.filters').querySelectorAll('.tag').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  currentPage = 1;
+  filterBooks();
+}
+
 function setFilter(genre, el) {
   currentFilter = genre;
   currentPage = 1;
@@ -359,13 +394,43 @@ function filterBooks() {
   const q = normaliser(document.getElementById('searchInput').value.trim());
   filtered = BOOKS;
   if (currentFilter !== 'Tous') filtered = filtered.filter(b => b.genre === currentFilter);
+  if (currentLangFilter === 'Autre') {
+    filtered = filtered.filter(b => b.langue && b.langue !== 'Français' && b.langue !== 'Anglais');
+  } else if (currentLangFilter !== 'Tous') {
+    filtered = filtered.filter(b => b.langue === currentLangFilter);
+  }
+  if (currentDispoFilter === 'stock') filtered = filtered.filter(b => b.stock > 0);
+  if (currentDispoFilter === 'commande') filtered = filtered.filter(b => b.stock === 0);
   if (q) filtered = filtered.filter(b =>
     normaliser(b.title).includes(q) ||
     normaliser(b.author).includes(q) ||
     normaliser(b.editeur).includes(q)
   );
+  // ── Tri ─────────────────────────────────────────────
+  const today = new Date();
+  filtered.sort((a, b) => {
+    if (currentSort === 'nouveautes') {
+      // Livres avec date_parution d'abord, triés du plus récent au plus ancien
+      const da = a.date_parution ? new Date(a.date_parution + (a.date_parution.length === 7 ? '-01' : '')) : null;
+      const db = b.date_parution ? new Date(b.date_parution + (b.date_parution.length === 7 ? '-01' : '')) : null;
+      if (da && db) return db - da;
+      if (da) return -1;
+      if (db) return  1;
+      return a.title.localeCompare(b.title, 'fr');
+    }
+    if (currentSort === 'titre')     return a.title.localeCompare(b.title, 'fr');
+    if (currentSort === 'auteur')    return (a.author||'').localeCompare(b.author||'', 'fr');
+    if (currentSort === 'prix_asc')  return (parseFloat(a.price)||999) - (parseFloat(b.price)||999);
+    if (currentSort === 'prix_desc') return (parseFloat(b.price)||0)   - (parseFloat(a.price)||0);
+    return 0;
+  });
   currentPage = 1;
   renderPage();
+}
+
+function setSort(val) {
+  currentSort = val;
+  filterBooks();
 }
 
 function renderPage() {
@@ -387,13 +452,17 @@ function renderPage() {
   grid.innerHTML = slice.map((b, i) => {
     const sClass = b.stock > 0 ? 'stock-ok' : 'stock-out';
     const sLabel = b.stock > 0 ? '● En stock' : '● À la commande';
-    const badge = b.fav ? '<span class="book-badge badge-fav">❤ Coup de cœur</span>'
+    const today = new Date();
+    const dp = b.date_parution ? new Date(b.date_parution + (b.date_parution.length === 7 ? '-01' : '')) : null;
+    const joursEcoules = dp ? Math.floor((today - dp) / 86400000) : 999;
+    const isNew = joursEcoules >= 0 && joursEcoules <= 30;
+    const badge = b.fav        ? '<span class="book-badge badge-fav">❤ Coup de cœur</span>'
+                : isNew        ? '<span class="book-badge badge-new">✦ Nouveauté</span>'
                 : b.stock === 0 ? '<span class="book-badge badge-out">Commande</span>' : '';
     const btnClass = b.stock > 0 ? 'available' : 'unavailable';
     const btnLabel = b.stock > 0 ? 'Réserver' : 'Me prévenir';
-    const imgHtml = b.ean
-      ? '<img alt="' + b.title.replace(/"/g,'&quot;') + '" loading="lazy"' +
-        ' data-ean="' + b.ean + '" class="lazy-cover"' +
+    const imgHtml = b.cover
+      ? '<img src="' + b.cover + '" alt="' + b.title.replace(/"/g,'&quot;') + '" loading="lazy"' +
         ' onerror="coverFallback(this)">' +
         '<span style="display:none;font-size:2.5rem;">📖</span>'
       : '<span style="font-size:2.5rem;">📖</span>';
@@ -413,8 +482,6 @@ function renderPage() {
 
   renderPagination(pages);
   window.scrollTo({ top: 0, behavior: 'smooth' });
-  // Charger les couvertures après rendu du DOM
-  document.querySelectorAll('img.lazy-cover').forEach(loadCover);
 }
 
 function renderPagination(pages) {
@@ -476,10 +543,9 @@ function openFiche(id) {
   if (!b) return;
 
   // Header : couverture + méta
-    const coverHtml = b.ean
-    ? '<img class="fiche-cover" alt="' + b.title.replace(/"/g,'&quot;') + '"'
-      + ' data-ean="' + b.ean + '" onerror="coverFallback(this)">'
-    : '<div class="fiche-cover-ph">📖</div>';
+    const coverHtml = b.cover
+      ? '<img class="fiche-cover" src="' + b.cover + '" alt="' + b.title.replace(/"/g,'&quot;') + '" onerror="coverFallback(this)">'
+      : '<div class="fiche-cover-ph">📖</div>';
 
   const dispo = b.stock > 0
     ? '<span class="fiche-dispo ok">✓ En stock</span>'
@@ -490,14 +556,21 @@ function openFiche(id) {
     '<div class="fiche-meta">' +
       '<div class="fiche-titre">' + b.title + '</div>' +
       '<div class="fiche-auteur">' + (b.author || '') + '</div>' +
-      '<div class="fiche-tags"><span class="fiche-tag">' + b.genre + '</span></div>' +
+      (b.traducteur ? '<div class="fiche-traducteur">Traduit par ' + b.traducteur + '</div>' : '') +
+      '<div class="fiche-tags">' +
+        '<span class="fiche-tag">' + b.genre + '</span>' +
+        (b.langue && b.langue !== 'Français' ? '<span class="fiche-tag" style="background:var(--warm)">' + b.langue + '</span>' : '') +
+        (b.collection ? '<span class="fiche-tag" style="background:#e8e4e0">' + b.collection + '</span>' : '') +
+      '</div>' +
       '<div class="fiche-prix">' + (b.price || '') + '</div>' +
     '</div>';
 
   // Body : résumé + infos + bouton
   let infosHtml = '';
   if (b.editeur)  infosHtml += '<div><div class="fiche-info-label">Éditeur</div><div class="fiche-info-val">' + b.editeur + '</div></div>';
-  if (b.annee)    infosHtml += '<div><div class="fiche-info-label">Année</div><div class="fiche-info-val">' + b.annee + '</div></div>';
+  const dateLabel = b.date_parution && b.date_parution.length > 4
+    ? formatDateParution(b.date_parution) : (b.annee || '');
+  if (dateLabel) infosHtml += '<div><div class="fiche-info-label">Parution</div><div class="fiche-info-val">' + dateLabel + '</div></div>';
   if (b.pages)    infosHtml += '<div><div class="fiche-info-label">Pages</div><div class="fiche-info-val">' + b.pages + '</div></div>';
   if (b.ean)      infosHtml += '<div><div class="fiche-info-label">ISBN</div><div class="fiche-info-val" style="font-size:.75rem;">' + b.ean + '</div></div>';
 
@@ -516,9 +589,6 @@ function openFiche(id) {
 
   document.getElementById('ficheOverlay').classList.add('open');
   document.body.style.overflow = 'hidden';
-  // Charger la couverture de la fiche
-  const ficheCoverImg = document.querySelector('#ficheHeader img.fiche-cover');
-  if (ficheCoverImg) loadCover(ficheCoverImg);
 }
 
 function closeFiche() {
