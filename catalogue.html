@@ -233,41 +233,45 @@ let currentPage = 1;
 const PER_PAGE = 40;
 let reserveBook = null;
 
-// ── COUVERTURES EN CASCADE ───────────────────────────────
-// Ordre : BNF → Open Library (grand) → Open Library (petit) → Google Books → placeholder
-function coverUrl(ean, idx) {
-  if (!ean) return '';
-  const sources = [
-    'https://covers.openlibrary.org/b/isbn/' + ean + '-L.jpg',
-    'https://covers.openlibrary.org/b/isbn/' + ean + '-M.jpg',
-    'https://books.google.com/books/content?vid=ISBN' + ean + '&printsec=frontcover&img=1&zoom=1&source=gbs_api',
-  ];
-  return sources[idx] || '';
+// ── COUVERTURES ──────────────────────────────────────────
+// Open Library retourne une image 1x1px (~807 bytes) si pas de couverture
+// On vérifie via fetch HEAD avant d'afficher
+const OL_PLACEHOLDER_MAX = 900;
+const _coverCache = {}; // ean -> true/false
+
+async function loadCover(img) {
+  const ean = img.dataset.ean;
+  if (!ean) { showPlaceholder(img); return; }
+
+  if (_coverCache[ean] === undefined) {
+    try {
+      const r = await fetch('https://covers.openlibrary.org/b/isbn/' + ean + '-L.jpg', { method: 'HEAD' });
+      const size = parseInt(r.headers.get('content-length') || '9999');
+      _coverCache[ean] = r.ok && size > OL_PLACEHOLDER_MAX;
+    } catch(e) { _coverCache[ean] = false; }
+  }
+
+  if (_coverCache[ean]) {
+    img.src = 'https://covers.openlibrary.org/b/isbn/' + ean + '-L.jpg';
+    img.onerror = function() { showPlaceholder(this); };
+  } else {
+    img.src = 'https://books.google.com/books/content?vid=ISBN' + ean + '&printsec=frontcover&img=1&zoom=1&source=gbs_api';
+    img.onerror = function() { showPlaceholder(this); };
+  }
 }
 
-// Taille minimale d'une vraie couverture (les placeholders BNF font ~1-3 Ko)
-const MIN_COVER_BYTES = 4000;
-
-function coverFallback(img) {
-  const ean = img.dataset.ean;
-  const idx = parseInt(img.dataset.srcIdx || '0') + 1;
-  const next = coverUrl(ean, idx);
-  if (next) {
-    // Vérifier si l'image précédente était un placeholder BNF (petite taille)
-    // On passe directement au suivant
-    img.dataset.srcIdx = idx;
-    img.src = next;
+function showPlaceholder(img) {
+  if (img.classList.contains('fiche-cover')) {
+    img.outerHTML = '<div class="fiche-cover-ph">📖</div>';
   } else {
-    // Plus de sources — afficher emoji
     img.style.display = 'none';
     const ph = img.nextElementSibling;
     if (ph) ph.style.cssText = 'display:flex;font-size:2.5rem;align-items:center;justify-content:center;width:100%;height:100%;';
-    // Pour la fiche : remplacer par div placeholder
-    if (img.classList.contains('fiche-cover')) {
-      img.outerHTML = '<div class="fiche-cover-ph">📖</div>';
-    }
   }
 }
+
+function coverFallback(img) { showPlaceholder(img); }
+function coverUrl(ean) { return ''; } // non utilisé
 
 
 
@@ -388,8 +392,8 @@ function renderPage() {
     const btnClass = b.stock > 0 ? 'available' : 'unavailable';
     const btnLabel = b.stock > 0 ? 'Réserver' : 'Me prévenir';
     const imgHtml = b.ean
-      ? '<img src="' + coverUrl(b.ean, 0) + '" alt="' + b.title.replace(/"/g,'&quot;') + '" loading="lazy"' +
-        ' data-ean="' + b.ean + '" data-src-idx="0"' +
+      ? '<img alt="' + b.title.replace(/"/g,'&quot;') + '" loading="lazy"' +
+        ' data-ean="' + b.ean + '" class="lazy-cover"' +
         ' onerror="coverFallback(this)">' +
         '<span style="display:none;font-size:2.5rem;">📖</span>'
       : '<span style="font-size:2.5rem;">📖</span>';
@@ -403,12 +407,14 @@ function renderPage() {
           '<span class="book-price">' + b.price + '</span>' +
           '<span class="' + sClass + '">' + sLabel + '</span>' +
         '</div>' +
-        '<button class="btn-reserve ' + btnClass + '" onclick="openReserve(' + b.id + ')">' + btnLabel + '</button>' +
+        '<button class="btn-reserve ' + btnClass + '" onclick="event.stopPropagation();openReserve(' + b.id + ')">' + btnLabel + '</button>' +
       '</div></div>';
   }).join('');
 
   renderPagination(pages);
   window.scrollTo({ top: 0, behavior: 'smooth' });
+  // Charger les couvertures après rendu du DOM
+  document.querySelectorAll('img.lazy-cover').forEach(loadCover);
 }
 
 function renderPagination(pages) {
@@ -471,8 +477,8 @@ function openFiche(id) {
 
   // Header : couverture + méta
     const coverHtml = b.ean
-    ? '<img class="fiche-cover" src="' + coverUrl(b.ean, 0) + '" alt="' + b.title.replace(/"/g,'&quot;') + '"'
-      + ' data-ean="' + b.ean + '" data-src-idx="0" onerror="coverFallback(this)">'
+    ? '<img class="fiche-cover" alt="' + b.title.replace(/"/g,'&quot;') + '"'
+      + ' data-ean="' + b.ean + '" onerror="coverFallback(this)">'
     : '<div class="fiche-cover-ph">📖</div>';
 
   const dispo = b.stock > 0
@@ -510,6 +516,9 @@ function openFiche(id) {
 
   document.getElementById('ficheOverlay').classList.add('open');
   document.body.style.overflow = 'hidden';
+  // Charger la couverture de la fiche
+  const ficheCoverImg = document.querySelector('#ficheHeader img.fiche-cover');
+  if (ficheCoverImg) loadCover(ficheCoverImg);
 }
 
 function closeFiche() {
