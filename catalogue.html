@@ -110,6 +110,37 @@
       font-size:0.9rem;background:white;outline:none;transition:border-color 0.2s;}
     .modal input:focus,.modal textarea:focus{border-color:var(--wood);}
     .modal-btns{display:flex;gap:0.8rem;justify-content:flex-end;margin-top:0.5rem;}
+    /* ── Modale fiche livre ── */
+    .fiche-overlay{display:none;position:fixed;inset:0;background:rgba(20,5,5,.65);
+      z-index:1100;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(2px);}
+    .fiche-overlay.open{display:flex;}
+    .fiche{background:var(--cream);border-radius:5px;max-width:640px;width:100%;
+      max-height:92vh;overflow-y:auto;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.4);}
+    .fiche-header{display:flex;gap:1.8rem;padding:2rem 2rem 1.5rem;border-bottom:1px solid rgba(92,26,26,.12);}
+    .fiche-cover{width:110px;flex-shrink:0;height:158px;object-fit:cover;border-radius:3px;box-shadow:0 4px 16px rgba(0,0,0,.25);}
+    .fiche-cover-ph{width:110px;height:158px;flex-shrink:0;background:var(--warm);border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:3rem;}
+    .fiche-meta{flex:1;min-width:0;}
+    .fiche-titre{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:var(--wood-dark);line-height:1.3;margin-bottom:.4rem;}
+    .fiche-auteur{font-family:'Lora',serif;font-size:.9rem;font-style:italic;color:var(--ink-soft);margin-bottom:.8rem;}
+    .fiche-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem;}
+    .fiche-tag{font-family:'Raleway',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.25rem .7rem;border-radius:20px;background:rgba(92,26,26,.1);color:var(--wood);}
+    .fiche-prix{font-family:'Raleway',sans-serif;font-size:1rem;font-weight:700;color:var(--wood-dark);}
+    .fiche-body{padding:1.5rem 2rem 2rem;}
+    .fiche-label{font-family:'Raleway',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);margin-bottom:.5rem;}
+    .fiche-resume{font-family:'Lora',serif;font-size:.88rem;line-height:1.8;color:var(--ink);margin-bottom:1.5rem;}
+    .fiche-infos{display:grid;grid-template-columns:1fr 1fr;gap:.6rem .8rem;margin-bottom:1.5rem;}
+    .fiche-info-label{font-family:'Raleway',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);}
+    .fiche-info-val{font-family:'Lora',serif;font-size:.82rem;color:var(--ink);}
+    .fiche-close{position:absolute;top:1rem;right:1rem;background:none;border:none;cursor:pointer;font-size:1.2rem;color:var(--ink-soft);width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background .15s;}
+    .fiche-close:hover{background:rgba(92,26,26,.1);}
+    .fiche-btns{display:flex;gap:.8rem;flex-wrap:wrap;align-items:center;}
+    .btn-fiche-reserve{font-family:'Raleway',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.75rem 1.5rem;background:var(--wood);color:var(--cream);border:none;border-radius:3px;cursor:pointer;transition:background .2s;}
+    .btn-fiche-reserve:hover{background:var(--wood-dark);}
+    .btn-fiche-reserve:disabled{opacity:.45;cursor:not-allowed;}
+    .fiche-dispo{font-family:'Raleway',sans-serif;font-size:.72rem;font-weight:700;padding:.4rem .8rem;border-radius:3px;}
+    .fiche-dispo.ok{background:rgba(39,174,96,.12);color:#1e8449;}
+    .fiche-dispo.nok{background:rgba(92,26,26,.08);color:var(--ink-soft);}
+    @media(max-width:520px){.fiche-header{flex-direction:column;align-items:center;text-align:center;}.fiche-infos{grid-template-columns:1fr;}}
     .btn-cancel{font-family:'Raleway',sans-serif;font-size:0.78rem;font-weight:600;
       padding:0.6rem 1.4rem;background:transparent;border:1.5px solid var(--parchment);
       color:var(--ink-soft);cursor:pointer;border-radius:2px;}
@@ -207,16 +238,19 @@ async function chargerStock() {
     const r = await fetch('stock.json?t=' + Date.now());
     if (!r.ok) throw new Error();
     const data = await r.json();
-    BOOKS = (data.livres || []).map((b, i) => ({
+    BOOKS = (data.livres || data || []).map((b, i) => ({
       id: i + 1,
-      ean: b.ean,
+      ean: b.ean || '',
       title: b.titre || '',
       author: b.auteur || '',
       editeur: b.editeur || '',
-      genre: devinerGenre(b.titre, b.auteur, b.editeur),
-      price: (b.prix || '').replace(' EUR','€').replace(' €','€').trim(),
-      stock: b.quantite || 0,
-      couverture: b.couverture || '',
+      annee: b.annee || '',
+      pages: b.pages || '',
+      resume: b.resume || '',
+      genre: b.genre || devinerGenre(b.titre, b.auteur, b.editeur),
+      price: (b.prix || '').replace(' EUR','€').replace(' €','€').replace('  ',' ').trim(),
+      cover: b.cover || '',
+      stock: b.stock || b.quantite || 0,
       fav: false,
     }));
 
@@ -315,12 +349,12 @@ function renderPage() {
                 : b.stock === 0 ? '<span class="book-badge badge-out">Commande</span>' : '';
     const btnClass = b.stock > 0 ? 'available' : 'unavailable';
     const btnLabel = b.stock > 0 ? 'Réserver' : 'Me prévenir';
-    const imgHtml = b.couverture
-      ? '<img src="' + b.couverture + '" alt="' + b.title.replace(/"/g,'') + '" loading="lazy"' +
+    const imgHtml = b.cover
+      ? '<img src="' + b.cover + '" alt="' + b.title.replace(/"/g,'') + '" loading="lazy"' +
         ' onerror="this.style.display=\'none\';this.nextElementSibling.style.cssText=\'display:flex;font-size:2.5rem;align-items:center;justify-content:center;width:100%;height:100%;\'">' +
         '<span style="display:none">📖</span>'
       : '<span style="font-size:2.5rem;">📖</span>';
-    return '<div class="book-card" style="animation-delay:' + (i%PER_PAGE*0.025) + 's">' +
+    return '<div class="book-card" style="animation-delay:' + (i%PER_PAGE*0.025) + 's;cursor:pointer;" onclick="openFiche(' + b.id + ')">' +
       '<div class="book-cover">' + badge + imgHtml + '</div>' +
       '<div class="book-info">' +
         '<div class="book-title">' + b.title + '</div>' +
@@ -390,6 +424,62 @@ function showToast(msg) {
   t.textContent = msg; t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 3500);
 }
+
+// ── FICHE LIVRE ──────────────────────────────
+function openFiche(id) {
+  const b = BOOKS.find(b => b.id === id);
+  if (!b) return;
+
+  // Header : couverture + méta
+  const coverHtml = b.cover
+    ? '<img class="fiche-cover" src="' + b.cover + '" alt="' + b.title + '" onerror="this.outerHTML='<div class=fiche-cover-ph>📖</div>'">'
+    : '<div class="fiche-cover-ph">📖</div>';
+
+  const dispo = b.stock > 0
+    ? '<span class="fiche-dispo ok">✓ En stock</span>'
+    : '<span class="fiche-dispo nok">Sur commande</span>';
+
+  document.getElementById('ficheHeader').innerHTML =
+    coverHtml +
+    '<div class="fiche-meta">' +
+      '<div class="fiche-titre">' + b.title + '</div>' +
+      '<div class="fiche-auteur">' + (b.author || '') + '</div>' +
+      '<div class="fiche-tags"><span class="fiche-tag">' + b.genre + '</span></div>' +
+      '<div class="fiche-prix">' + (b.price || '') + '</div>' +
+    '</div>';
+
+  // Body : résumé + infos + bouton
+  let infosHtml = '';
+  if (b.editeur)  infosHtml += '<div><div class="fiche-info-label">Éditeur</div><div class="fiche-info-val">' + b.editeur + '</div></div>';
+  if (b.annee)    infosHtml += '<div><div class="fiche-info-label">Année</div><div class="fiche-info-val">' + b.annee + '</div></div>';
+  if (b.pages)    infosHtml += '<div><div class="fiche-info-label">Pages</div><div class="fiche-info-val">' + b.pages + '</div></div>';
+  if (b.ean)      infosHtml += '<div><div class="fiche-info-label">ISBN</div><div class="fiche-info-val" style="font-size:.75rem;">' + b.ean + '</div></div>';
+
+  const resumeHtml = b.resume
+    ? '<div class="fiche-label">Résumé</div><div class="fiche-resume">' + b.resume + '</div>'
+    : '';
+
+  const btnReserve = b.stock > 0
+    ? '<button class="btn-fiche-reserve" onclick="closeFiche();openReserve(' + b.id + ')">Réserver ce livre</button>'
+    : '<button class="btn-fiche-reserve" disabled>Non disponible</button>';
+
+  document.getElementById('ficheBody').innerHTML =
+    resumeHtml +
+    (infosHtml ? '<div class="fiche-label">Informations</div><div class="fiche-infos">' + infosHtml + '</div>' : '') +
+    '<div class="fiche-btns">' + btnReserve + dispo + '</div>';
+
+  document.getElementById('ficheOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeFiche() {
+  document.getElementById('ficheOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeFiche();
+});
 
 chargerStock().then(() => {
   // Pré-remplir la recherche depuis l'URL (?q=...)
