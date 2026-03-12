@@ -233,6 +233,53 @@ let currentPage = 1;
 const PER_PAGE = 40;
 let reserveBook = null;
 
+// ── COUVERTURES EN CASCADE ───────────────────────────────
+// Ordre : BNF → Open Library (grand) → Open Library (petit) → Google Books → placeholder
+function coverUrl(ean, idx) {
+  if (!ean) return '';
+  const sources = [
+    'https://catalogue.bnf.fr/couverture?appName=NE&idArk=&isbn=' + ean + '&nqaip=2',
+    'https://covers.openlibrary.org/b/isbn/' + ean + '-L.jpg',
+    'https://covers.openlibrary.org/b/isbn/' + ean + '-M.jpg',
+    'https://books.google.com/books/content?vid=ISBN' + ean + '&printsec=frontcover&img=1&zoom=1',
+  ];
+  return sources[idx] || '';
+}
+
+// Taille minimale d'une vraie couverture (les placeholders BNF font ~1-3 Ko)
+const MIN_COVER_BYTES = 4000;
+
+function coverFallback(img) {
+  const ean = img.dataset.ean;
+  const idx = parseInt(img.dataset.srcIdx || '0') + 1;
+  const next = coverUrl(ean, idx);
+  if (next) {
+    // Vérifier si l'image précédente était un placeholder BNF (petite taille)
+    // On passe directement au suivant
+    img.dataset.srcIdx = idx;
+    img.src = next;
+  } else {
+    // Plus de sources — afficher emoji
+    img.style.display = 'none';
+    const ph = img.nextElementSibling;
+    if (ph) ph.style.cssText = 'display:flex;font-size:2.5rem;align-items:center;justify-content:center;width:100%;height:100%;';
+    // Pour la fiche : remplacer par div placeholder
+    if (img.classList.contains('fiche-cover')) {
+      img.outerHTML = '<div class="fiche-cover-ph">📖</div>';
+    }
+  }
+}
+
+// Détecter les images BNF "vides" (placeholder ~1-3 Ko) après chargement
+function checkBnfPlaceholder(img) {
+  // On ne peut pas lire la taille depuis le browser sans fetch
+  // Donc on fait confiance au onerror pour les 404 réels
+  // et on vérifie via naturalWidth pour les images 1x1 ou transparentes
+  if (img.naturalWidth <= 1 || img.naturalHeight <= 1) {
+    coverFallback(img);
+  }
+}
+
 async function chargerStock() {
   try {
     const r = await fetch('stock.json?t=' + Date.now());
@@ -349,10 +396,15 @@ function renderPage() {
                 : b.stock === 0 ? '<span class="book-badge badge-out">Commande</span>' : '';
     const btnClass = b.stock > 0 ? 'available' : 'unavailable';
     const btnLabel = b.stock > 0 ? 'Réserver' : 'Me prévenir';
-    const imgHtml = b.cover
-      ? '<img src="' + b.cover + '" alt="' + b.title.replace(/"/g,'') + '" loading="lazy"' +
-        ' onerror="this.style.display=\'none\';this.nextElementSibling.style.cssText=\'display:flex;font-size:2.5rem;align-items:center;justify-content:center;width:100%;height:100%;\'">' +
-        '<span style="display:none">📖</span>'
+    const bnfCover = b.cover && b.cover.includes('bnf.fr') ? b.cover : '';
+    const firstSrc = bnfCover || coverUrl(b.ean, bnfCover ? 0 : 1);
+    const startIdx = bnfCover ? 0 : 1;
+    const imgHtml = b.ean || b.cover
+      ? '<img src="' + (firstSrc || coverUrl(b.ean, 0)) + '" alt="' + b.title.replace(/"/g,'&quot;') + '" loading="lazy"' +
+        ' data-ean="' + b.ean + '" data-src-idx="' + startIdx + '"' +
+        ' onload="checkBnfPlaceholder(this)"' +
+        ' onerror="coverFallback(this)">' +
+        '<span style="display:none;font-size:2.5rem;">📖</span>'
       : '<span style="font-size:2.5rem;">📖</span>';
     return '<div class="book-card" style="animation-delay:' + (i%PER_PAGE*0.025) + 's;cursor:pointer;" onclick="openFiche(' + b.id + ')">' +
       '<div class="book-cover">' + badge + imgHtml + '</div>' +
@@ -431,8 +483,13 @@ function openFiche(id) {
   if (!b) return;
 
   // Header : couverture + méta
-  const coverHtml = b.cover
-    ? '<img class="fiche-cover" src="' + b.cover + '" alt="' + b.title + '" onerror="this.outerHTML='<div class=fiche-cover-ph>📖</div>'">'
+    const bnfCoverF = b.cover && b.cover.includes('bnf.fr') ? b.cover : '';
+  const firstSrcF = bnfCoverF || coverUrl(b.ean, 1);
+  const startIdxF = bnfCoverF ? 0 : 1;
+  const coverHtml = (b.cover || b.ean)
+    ? '<img class="fiche-cover" src="' + firstSrcF + '" alt="' + b.title.replace(/"/g,'&quot;') + '"'
+      + ' data-ean="' + b.ean + '" data-src-idx="' + startIdxF + '"'
+      + ' onload="checkBnfPlaceholder(this)" onerror="coverFallback(this)">'
     : '<div class="fiche-cover-ph">📖</div>';
 
   const dispo = b.stock > 0
