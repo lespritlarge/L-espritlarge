@@ -137,8 +137,8 @@ details[open] .rblock summary::before{transform:rotate(90deg);}
   <div class="hdr">
     <div class="hdr-logo">Admin — L'<span>Esprit</span> Large</div>
     <div class="hdr-r">
-      <a href="blog.html" target="_blank">Blog →</a>
-      <a href="evenements.html" target="_blank">Événements →</a>
+      <a href="https://esprit-large.com/blog.html" target="_blank">Blog →</a>
+      <a href="https://esprit-large.com/evenements.html" target="_blank">Événements →</a>
       <button class="btn-out" onclick="logout()">Déconnexion</button>
     </div>
   </div>
@@ -296,6 +296,15 @@ details[open] .rblock summary::before{transform:rotate(90deg);}
         </div>
         <div class="f"><label>Votre prénom</label>
           <input type="text" id="cLibraire" placeholder="Ex : Marie"/></div>
+        <div class="f"><label>Catégorie</label>
+          <select id="cCategorie" style="padding:.6rem;font-family:'Lora',serif;font-size:.88rem;border:1.5px solid rgba(92,26,26,.2);border-radius:4px;background:#fff;color:var(--ink);">
+            <option value="">— Choisir —</option>
+            <option value="Roman">Roman</option>
+            <option value="BD">BD</option>
+            <option value="Jeunesse">Jeunesse</option>
+            <option value="Essai">Essai</option>
+          </select>
+        </div>
         <div class="fbtns">
           <button class="btn-save" onclick="Coups.ajouter()">❤️ Ajouter ce coup de cœur</button>
         </div>
@@ -902,6 +911,7 @@ var Coups = (() => {
           <div style="font-family:'Lora',serif;font-size:.88rem;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${c.titre || c.ean}</div>
           <div style="font-size:.72rem;color:var(--soft);">${c.auteur || ''}</div>
           ${c.citation ? `<div style="font-family:'Lora',serif;font-style:italic;font-size:.78rem;color:var(--soft);margin-top:.2rem;">"${c.citation.substring(0,80)}${c.citation.length>80?'…':''}"</div>` : ''}
+          ${c.categorie ? `<div style="font-size:.62rem;font-weight:700;color:#fff;background:var(--wood);border-radius:3px;padding:.1rem .4rem;display:inline-block;text-transform:uppercase;letter-spacing:.06em;">${c.categorie}</div>` : ''}
           ${c.libraire ? `<div style="font-size:.65rem;font-weight:700;color:var(--wood);text-transform:uppercase;letter-spacing:.06em;">— ${c.libraire}</div>` : ''}
         </div>
         <button onclick="Coups.supprimer(${i})" style="flex-shrink:0;background:none;border:none;cursor:pointer;font-size:1.1rem;color:#c0392b;padding:.3rem;" title="Supprimer">🗑</button>
@@ -930,9 +940,10 @@ var Coups = (() => {
   }
 
   async function ajouter() {
-    const ean      = document.getElementById('cEan').value.trim();
-    const citation = document.getElementById('cCitation').value.trim();
-    const libraire = document.getElementById('cLibraire').value.trim();
+    const ean       = document.getElementById('cEan').value.trim();
+    const citation  = document.getElementById('cCitation').value.trim();
+    const libraire  = document.getElementById('cLibraire').value.trim();
+    const categorie = document.getElementById('cCategorie').value.trim();
     if (!ean)      { toast('⚠️ EAN obligatoire.'); return; }
     if (!citation) { toast('⚠️ La citation est obligatoire.'); return; }
     if (items.find(c => c.ean === ean)) { toast('⚠️ Ce livre est déjà dans les coups de cœur.'); return; }
@@ -946,11 +957,12 @@ var Coups = (() => {
       if (livre) { titre = livre.titre; auteur = livre.auteur; couverture = livre.couverture || ''; }
     } catch(_) {}
 
-    items.push({ ean, titre, auteur, couverture, citation, libraire });
+    items.push({ ean, titre, auteur, couverture, citation, libraire, categorie });
     const ok = await ghWrite('coups.json', { mis_a_jour: new Date().toISOString(), coups: items }, '❤️ Coup de cœur : ' + (titre || ean));
     if (ok) {
       toast('✅ Coup de cœur ajouté !');
       ['cEan','cCitation','cLibraire'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('cCategorie').value = '';
       document.getElementById('cApercu').style.display = 'none';
       renderList();
     }
