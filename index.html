@@ -36,21 +36,19 @@
     /* ── NAV ── */
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      background: rgba(242,240,239,0.97);
+      background: rgba(242,240,239,0.95);
       backdrop-filter: blur(8px);
-      border-bottom: 1px solid rgba(92,26,26,0.12);
-      padding: 0 2rem;
+      border-bottom: 1px solid rgba(92,26,26,0.1);
+      padding: 0 1.5rem;
       display: flex; align-items: center; justify-content: space-between;
-      height: 80px;
+      height: 48px;
     }
     .nav-logo {
       font-family: 'Playfair Display', serif;
-      font-size: 1.25rem; font-weight: 800; font-style: italic;
+      font-size: 1.1rem; font-weight: 800; font-style: italic;
       color: var(--wood-dark);
       letter-spacing: -0.02em;
       white-space: nowrap;
-      display: flex; align-items: center; gap: 0.75rem;
-      text-decoration: none;
     }
     .nav-logo span { color: var(--amber); }
     .nav-links { display: flex; gap: 1.4rem; list-style: none; flex-wrap: nowrap; }
@@ -206,7 +204,7 @@
     /* ── BOOK GRID ── */
     .book-grid {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 2rem;
     }
     .book-card {
@@ -266,18 +264,21 @@
 
     /* ── COUPS DE CŒUR ── */
     #blog-home { background: var(--cream); }
-    .blog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.8rem; margin-top: 2rem; }
+    .blog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.8rem; margin-top: 2rem; }
     .blog-card { background: #fff; border-radius: 6px; overflow: hidden; box-shadow: 0 2px 12px rgba(42,31,20,.08); transition: transform .2s, box-shadow .2s; display: flex; flex-direction: column; }
     .blog-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(42,31,20,.15); }
-    .blog-card-img { width: 100%; height: 180px; object-fit: cover; background: var(--parchment); display: flex; align-items: center; justify-content: center; font-size: 3rem; }
+    .blog-card-img { width: 100%; height: 160px; background: var(--parchment); display: flex; align-items: center; justify-content: center; font-size: 3rem; overflow: hidden; }
     .blog-card-img img { width: 100%; height: 100%; object-fit: cover; }
-    .blog-card-body { padding: 1.4rem; flex: 1; display: flex; flex-direction: column; }
-    .blog-card-cat { font-size: .68rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--wood); margin-bottom: .4rem; }
-    .blog-card-titre { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--ink); margin-bottom: .6rem; line-height: 1.35; }
-    .blog-card-extrait { font-family: 'Lora', serif; font-size: .85rem; color: var(--ink-soft); line-height: 1.6; flex: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-    .blog-card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; }
-    .blog-card-date { font-size: .72rem; color: var(--ink-soft); }
-    .blog-card-lire { font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--wood); text-decoration: none; }
+    .blog-card-body { padding: 1.2rem 1.4rem; flex: 1; display: flex; flex-direction: column; }
+    .blog-card-cat { font-size: .65rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: .35rem; }
+    .blog-card-cat.type-blog    { color: var(--wood); }
+    .blog-card-cat.type-event   { color: #2d6a4f; }
+    .blog-card-cat.type-tempete { color: #1a3a5c; }
+    .blog-card-titre { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: var(--ink); margin-bottom: .5rem; line-height: 1.35; }
+    .blog-card-extrait { font-family: 'Lora', serif; font-size: .83rem; color: var(--ink-soft); line-height: 1.6; flex: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .blog-card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: .8rem; }
+    .blog-card-date { font-size: .7rem; color: var(--ink-soft); }
+    .blog-card-lire { font-size: .7rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--wood); text-decoration: none; }
     .blog-card-lire:hover { text-decoration: underline; }
     .blog-empty { font-family: 'Lora', serif; font-style: italic; color: var(--ink-soft); text-align: center; padding: 2rem; }
     #coups-de-coeur { background: var(--parchment); }
@@ -316,11 +317,6 @@
       background: linear-gradient(90deg, rgba(212,150,58,0.08) 0%, var(--cream) 100%) !important;
     }
     .event-special .event-title { color: var(--wood-dark); font-size: 1.1rem; }
-    .event-fermeture {
-      border-left: 3px solid #999 !important;
-      background: linear-gradient(90deg, rgba(120,120,120,0.07) 0%, var(--cream) 100%) !important;
-      opacity: 0.8;
-    }
     .event-card:hover { transform: translateX(4px); }
     .event-date {
       min-width: 60px; text-align: center;
@@ -470,9 +466,8 @@
 
     /* ── HERO SLIDESHOW ── */
     #hero {
-      height: 70vh;
-      min-height: 500px;
-      margin-top: 80px;
+      height: 60vh;
+      min-height: 400px;
       position: relative; overflow: hidden;
       display: flex; align-items: center; justify-content: center;
     }
@@ -496,11 +491,9 @@
       animation: fadeUp 0.9s ease both;
     }
     .hero-logo-wrap img {
-      width: 300px; height: 300px;
+      width: 180px; height: 180px;
       object-fit: contain;
-      filter: drop-shadow(0 4px 32px rgba(0,0,0,0.6)) brightness(0) invert(1);
-      opacity: 0.97;
-    }
+      filter: drop-shadow(0 4px 24px rgba(0,0,0,0.5)) brightness(0) invert(1);
       opacity: 0.95;
     }
     .hero-logo-wrap svg { filter: drop-shadow(0 4px 24px rgba(0,0,0,0.4)); }
@@ -676,16 +669,14 @@
 
 <!-- NAV -->
 <nav>
-  <a href="index.html" class="nav-logo">
-    <img src="images/logo.png" alt="Logo L'Esprit Large" style="width:64px;height:64px;object-fit:contain;" />
+  <div class="nav-logo">
+    <img src="images/logo.png" alt="Logo L'Esprit Large" style="width:42px;height:42px;vertical-align:middle;margin-right:0.5rem;object-fit:contain;" />
     L'<span>Esprit</span> Large
-  </a>
+  </div>
   <ul class="nav-links">
-    <li><a href="catalogue.html">Catalogue</a></li>
+    <li><a href="#catalogue">Catalogue</a></li>
     <li><a href="#coups-de-coeur">Coups de cœur</a></li>
     <li><a href="evenements.html">Événements</a></li>
-    <li><a href="blog.html">Blog</a></li>
-    <li><a href="escapades.html" style="color:var(--amber,#c4854a);font-weight:600;">🎒 Escapades</a></li>
     <li><a href="avisdetempete.html" class="nav-tempete">🌊 Avis de Tempête</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
@@ -706,11 +697,11 @@
   <div class="hero-content">
     <!-- Big real logo -->
     <div class="hero-logo-wrap">
-      <img src="images/logo.png" alt="Librairie L'Esprit Large" style="width:260px;height:260px;object-fit:contain;filter:drop-shadow(0 4px 32px rgba(0,0,0,0.6)) brightness(0) invert(1);opacity:0.97;" />
+      <img src="images/logo.png" alt="Librairie L'Esprit Large" style="width:180px;height:180px;object-fit:contain;filter:drop-shadow(0 4px 24px rgba(0,0,0,0.5)) brightness(0) invert(1);opacity:0.95;" />
     </div>
     <div class="hero-btns" style="margin-top:2rem;">
       <a href="catalogue.html" class="btn-primary">Explorer le catalogue</a>
-      <a href="#evenements" class="btn-secondary-light">Voir les événements</a>
+      <a href="evenements.html" class="btn-secondary-light">Voir les événements</a>
     </div>
     <div style="margin-top:1.8rem;background:rgba(0,0,0,.45);border-radius:6px;padding:1rem 1.6rem;backdrop-filter:blur(6px);display:inline-block;text-align:left;">
       <div style="font-family:'Raleway',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:.6rem;">Horaires d'ouverture</div>
@@ -732,37 +723,32 @@
   </div>
 </section>
 
-<!-- CATALOGUE -->
+<!-- BLOG HOME -->
 <section id="blog-home">
   <div class="section-header">
     <div>
       <h2 class="section-title">Le blog de la librairie</h2>
-      <p class="section-sub">Nos coups de plume, lectures du moment et actualités</p>
+      <p class="section-sub">Nos articles, événements &amp; avis de tempête</p>
     </div>
-    <a href="blog.html" class="voir-tout">Tous les articles →</a>
+    <a href="blog.html" class="voir-tout">Tout voir →</a>
   </div>
   <div class="blog-grid" id="blogHomeGrid">
     <p class="blog-empty">Chargement…</p>
   </div>
 </section>
 
-<section id="catalogue" style="background:var(--cream);padding:3rem 2rem;">
-  <div style="max-width:680px;margin:0 auto;text-align:center;">
-    <div style="font-family:'Raleway',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--amber);margin-bottom:0.5rem;">Recherche</div>
-    <h2 style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--wood-dark);margin-bottom:1.2rem;">Trouvez votre prochain livre</h2>
-    <div style="display:flex;gap:0;box-shadow:0 2px 16px var(--shadow);border-radius:3px;overflow:hidden;">
-      <input type="text" id="searchInput" placeholder="Titre, auteur, genre…"
-        style="flex:1;padding:1rem 1.4rem;font-family:'Lora',serif;font-size:0.95rem;border:none;outline:none;background:white;color:var(--ink);"
-        onkeydown="if(event.key==='Enter') goSearch()" />
-      <button onclick="goSearch()"
-        style="padding:1rem 1.8rem;background:var(--wood);color:var(--cream);border:none;cursor:pointer;font-family:'Raleway',sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;transition:background 0.2s;white-space:nowrap;"
-        onmouseover="this.style.background='var(--wood-dark)'" onmouseout="this.style.background='var(--wood)'">
-        Rechercher →
-      </button>
+<!-- CATALOGUE -->
+<section id="catalogue">
+  <div class="section-header">
+    <div>
+      <h2 class="section-title">Notre catalogue</h2>
+      <p class="section-sub">Plus de 6 000 titres disponibles ou sur commande</p>
     </div>
-    <p style="margin-top:1rem;font-family:'Lora',serif;font-style:italic;font-size:0.82rem;color:var(--ink-soft);">
-      Ou <a href="catalogue.html" style="color:var(--wood);text-decoration:underline;">parcourez tout le catalogue</a>
-    </p>
+    <a href="catalogue.html" class="voir-tout">Tout le catalogue →</a>
+  </div>
+  <div id="catalogueGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:1rem;margin-top:1.5rem;"></div>
+  <div style="text-align:center;margin-top:2rem;">
+    <a href="catalogue.html" style="font-family:'Raleway',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:var(--wood);color:var(--cream);padding:.85rem 2.5rem;border-radius:3px;text-decoration:none;display:inline-block;" onmouseover="this.style.background='var(--wood-dark)'" onmouseout="this.style.background='var(--wood)'">Explorer tout le catalogue →</a>
   </div>
 </section>
 
@@ -777,119 +763,43 @@
   <div class="coup-grid" id="coupGrid"></div>
 </section>
 
-<!-- ESCAPADES BANNIÈRE -->
-<section id="escapades" style="background:var(--wood-dark,#5c1a1a);padding:4rem;">
-  <div style="max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:2rem;">
-    <div>
-      <p style="font-family:'Raleway',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(242,240,239,.5);margin-bottom:.6rem;">✦ Abonnement mensuel</p>
-      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:900;font-style:italic;color:var(--cream,#f2f0ef);line-height:1.1;margin-bottom:.8rem;">Les <span style="color:#e8b97a;">Escapades</span><br/>de vos Libraires</h2>
-      <p style="font-family:'Lora',serif;font-style:italic;font-size:.95rem;color:rgba(242,240,239,.7);line-height:1.7;max-width:420px;">Un livre choisi spécialement pour vous chaque mois. Dès 10€/mois. Vous ne savez plus quoi lire&nbsp;? Faites-nous confiance&nbsp;!</p>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:.9rem;align-items:flex-start;">
-      <div style="display:flex;flex-wrap:wrap;gap:.5rem;">
-        <span style="font-family:'Raleway',sans-serif;font-size:.72rem;font-weight:700;background:rgba(242,240,239,.12);color:var(--cream,#f2f0ef);padding:.35rem .9rem;border-radius:20px;">🎒 Petite — 10€</span>
-        <span style="font-family:'Raleway',sans-serif;font-size:.72rem;font-weight:700;background:rgba(242,240,239,.12);color:var(--cream,#f2f0ef);padding:.35rem .9rem;border-radius:20px;">🎒 Escapade — 20€</span>
-        <span style="font-family:'Raleway',sans-serif;font-size:.72rem;font-weight:700;background:rgba(242,240,239,.12);color:var(--cream,#f2f0ef);padding:.35rem .9rem;border-radius:20px;">📖 Grande — 25€</span>
-        <span style="font-family:'Raleway',sans-serif;font-size:.72rem;font-weight:700;background:rgba(242,240,239,.12);color:var(--cream,#f2f0ef);padding:.35rem .9rem;border-radius:20px;">🌟 Jeunesse — 18€</span>
-        <span style="font-family:'Raleway',sans-serif;font-size:.72rem;font-weight:700;background:rgba(242,240,239,.12);color:var(--cream,#f2f0ef);padding:.35rem .9rem;border-radius:20px;">🎭 Illustrée — 25€</span>
+<!-- BANDEAU LIENS RAPIDES -->
+<section style="background:var(--parchment);padding:2.5rem 4rem;border-top:1px solid var(--wood-light);">
+  <div style="max-width:960px;margin:0 auto;display:flex;flex-wrap:wrap;gap:1.5rem;justify-content:center;">
+    <a href="evenements.html" style="flex:1;min-width:220px;background:#fff;border-radius:6px;padding:1.5rem 1.8rem;text-decoration:none;display:flex;align-items:center;gap:1.2rem;box-shadow:0 2px 10px rgba(42,31,20,.07);transition:box-shadow .2s;border-left:4px solid var(--wood);" onmouseover="this.style.boxShadow='0 6px 20px rgba(42,31,20,.14)'" onmouseout="this.style.boxShadow='0 2px 10px rgba(42,31,20,.07)'">
+      <span style="font-size:2rem;">&#x1F4C5;</span>
+      <div>
+        <div style="font-family:'Raleway',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--wood);margin-bottom:.25rem;">Agenda</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--ink);">Nos événements</div>
+        <div style="font-family:'Lora',serif;font-size:.78rem;font-style:italic;color:var(--ink-soft);margin-top:.15rem;">Rencontres, lectures &amp; ateliers →</div>
       </div>
-      <a href="escapades.html" style="display:inline-block;font-family:'Raleway',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:#e8b97a;color:#3d1a00;padding:.85rem 2rem;border-radius:2px;text-decoration:none;transition:all .2s;" onmouseover="this.style.background='#f5cc8a'" onmouseout="this.style.background='#e8b97a'">Je m'abonne →</a>
-    </div>
+    </a>
+    <a href="avisdetempete.html" style="flex:1;min-width:220px;background:var(--wood-dark,#5c1a1a);border-radius:6px;padding:1.5rem 1.8rem;text-decoration:none;display:flex;align-items:center;gap:1.2rem;box-shadow:0 2px 10px rgba(42,31,20,.12);transition:box-shadow .2s;" onmouseover="this.style.boxShadow='0 6px 20px rgba(42,31,20,.25)'" onmouseout="this.style.boxShadow='0 2px 10px rgba(42,31,20,.12)'">
+      <span style="font-size:2rem;">&#x1F30A;</span>
+      <div>
+        <div style="font-family:'Raleway',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(242,240,239,.5);margin-bottom:.25rem;">Newsletter</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--cream);">Avis de Tempête</div>
+        <div style="font-family:'Lora',serif;font-size:.78rem;font-style:italic;color:rgba(242,240,239,.6);margin-top:.15rem;">Notre newsletter mensuelle →</div>
+      </div>
+    </a>
+    <a href="escapades.html" style="flex:1;min-width:220px;background:#fff;border-radius:6px;padding:1.5rem 1.8rem;text-decoration:none;display:flex;align-items:center;gap:1.2rem;box-shadow:0 2px 10px rgba(42,31,20,.07);transition:box-shadow .2s;border-left:4px solid #e8b97a;" onmouseover="this.style.boxShadow='0 6px 20px rgba(42,31,20,.14)'" onmouseout="this.style.boxShadow='0 2px 10px rgba(42,31,20,.07)'">
+      <span style="font-size:2rem;">&#x1F392;</span>
+      <div>
+        <div style="font-family:'Raleway',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#c4854a;margin-bottom:.25rem;">Abonnement</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--ink);">Les Escapades</div>
+        <div style="font-family:'Lora',serif;font-size:.78rem;font-style:italic;color:var(--ink-soft);margin-top:.15rem;">Un livre surprise chaque mois →</div>
+      </div>
+    </a>
   </div>
 </section>
 
-<!-- ÉVÉNEMENTS -->
-<section id="evenements">
-  <div class="section-header">
-    <div>
-      <h2 class="section-title">Événements</h2>
-      <p class="section-sub">Rencontres, lectures & ateliers</p>
-    </div>
-    <a href="evenements.html" style="font-family:'Raleway',sans-serif;font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--wood);text-decoration:none;border:1.5px solid var(--wood-light);padding:0.4rem 1rem;border-radius:2px;white-space:nowrap;transition:all 0.2s;" onmouseover="this.style.background='var(--wood)';this.style.color='var(--cream)'" onmouseout="this.style.background='transparent';this.style.color='var(--wood)'">Voir le calendrier →</a>
-  </div>
-  <div class="event-list" id="eventList"></div>
-</section>
-
-<!-- AVIS DE TEMPÊTE — NEWSLETTER -->
-<section id="newsletter">
-  <div class="tempete-inner">
-    <div class="tempete-left">
-      <div class="tempete-label">📨 Newsletter</div>
-      <h2 class="section-title" style="color:var(--cream);">Avis de Tempête</h2>
-      <p class="tempete-desc">Notre newsletter, comme une bouteille à la mer : des coups de cœur, des actualités, des événements à venir et notre humeur. Paraît une fois par mois, quand la tempête arrive...</p>
-      <div class="tempete-archives">
-        <p style="font-family:'Raleway',sans-serif;font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(196,112,112,0.8);margin-bottom:0.8rem;">Tous les numéros</p>
-        <div style="margin-bottom:1.5rem;">
-          <a href="avisdetempete.html" style="display:inline-block;font-family:'Raleway',sans-serif;font-size:0.8rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;background:var(--cream);color:var(--wood-dark);padding:0.75rem 1.5rem;border-radius:2px;text-decoration:none;transition:all 0.2s;" onmouseover="this.style.background='#fff'" onmouseout="this.style.background='var(--cream)'">
-            🌊 Voir tous les Avis de Tempête →
-          </a>
-        </div>
-
-        <!-- 2026 -->
-        <p style="font-family:'Raleway',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:rgba(242,240,239,0.3);margin:1rem 0 0.4rem;">2026</p>
-        <a href="avisdetempete.html" class="archive-item"><span class="archive-num">Mars</span><span class="archive-title">Avis de Tempête — Mars 2026</span><span class="archive-arrow">→</span></a>
-        <a href="avisdetempete.html" class="archive-item"><span class="archive-num">Fév.</span><span class="archive-title">Avis de Tempête — Février 2026</span><span class="archive-arrow">→</span></a>
-        <a href="avisdetempete.html" class="archive-item"><span class="archive-num">Jan.</span><span class="archive-title">Avis de Tempête — Janvier 2026</span><span class="archive-arrow">→</span></a>
-
-        <!-- 2025 -->
-        <p style="font-family:'Raleway',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:rgba(242,240,239,0.3);margin:1rem 0 0.4rem;">2025</p>
-        <a href="avisdetempete.html" class="archive-item"><span class="archive-num">Déc.</span><span class="archive-title">Avis de Tempête — Décembre 2025</span><span class="archive-arrow">→</span></a>
-        <a href="avisdetempete.html" class="archive-item"><span class="archive-num">Nov.</span><span class="archive-title">Avis de Tempête — Novembre 2025</span><span class="archive-arrow">→</span></a>
-        <a href="avisdetempete.html" class="archive-item"><span class="archive-num">Oct.</span><span class="archive-title">Avis de Tempête — Octobre 2025</span><span class="archive-arrow">→</span></a>
-        <a href="avisdetempete.html" class="archive-item"><span class="archive-num">Sep.</span><span class="archive-title">Avis de Tempête — Septembre 2025</span><span class="archive-arrow">→</span></a>
-        <a href="avisdetempete.html" class="archive-item"><span class="archive-num">Août</span><span class="archive-title">Avis de Tempête — Août 2025</span><span class="archive-arrow">→</span></a>
-        <a href="avisdetempete.html" class="archive-item"><span class="archive-num">Juil.</span><span class="archive-title">Avis de Tempête — Juillet 2025</span><span class="archive-arrow">→</span></a>
-        <a href="avisdetempete.html" class="archive-item"><span class="archive-num">Juin</span><span class="archive-title">Avis de Tempête — Juin 2025</span><span class="archive-arrow">→</span></a>
-        <a href="avisdetempete.html" class="archive-item"><span class="archive-num">Mai</span><span class="archive-title">Avis de Tempête — Mai 2025</span><span class="archive-arrow">→</span></a>
-        <a href="avisdetempete.html" class="archive-item"><span class="archive-num">Avr.</span><span class="archive-title">Avis de Tempête — Avril 2025</span><span class="archive-arrow">→</span></a>
-        <a href="avisdetempete.html" class="archive-item"><span class="archive-num">Mars</span><span class="archive-title">Avis de Tempête — Mars 2025</span><span class="archive-arrow">→</span></a>
-        <a href="avisdetempete.html" class="archive-item"><span class="archive-num">Fév.</span><span class="archive-title">Avis de Tempête — Février 2025</span><span class="archive-arrow">→</span></a>
-        <a href="avisdetempete.html" class="archive-item"><span class="archive-num">Jan.</span><span class="archive-title">Avis de Tempête — Janvier 2025</span><span class="archive-arrow">→</span></a>
-
-        <!-- 2024 -->
-        <p style="font-family:'Raleway',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:rgba(242,240,239,0.3);margin:1rem 0 0.4rem;">2024</p>
-        <a href="avisdetempete.html" class="archive-item"><span class="archive-num">Déc.</span><span class="archive-title">Avis de Tempête — Décembre 2024</span><span class="archive-arrow">→</span></a>
-        <a href="avisdetempete.html" class="archive-item"><span class="archive-num">Nov.</span><span class="archive-title">Avis de Tempête — Novembre 2024</span><span class="archive-arrow">→</span></a>
-        <a href="avisdetempete.html" class="archive-item"><span class="archive-num">Oct.</span><span class="archive-title">Avis de Tempête — Octobre 2024</span><span class="archive-arrow">→</span></a>
-        <a href="avisdetempete.html" class="archive-item"><span class="archive-num">Sep.</span><span class="archive-title">Avis de Tempête — Septembre 2024</span><span class="archive-arrow">→</span></a>
-        <a href="avisdetempete.html" class="archive-item"><span class="archive-num">Août</span><span class="archive-title">Avis de Tempête — Août 2024</span><span class="archive-arrow">→</span></a>
-        <a href="avisdetempete.html" class="archive-item"><span class="archive-num">Juil.</span><span class="archive-title">Avis de Tempête — Juillet 2024</span><span class="archive-arrow">→</span></a>
-        <a href="avisdetempete.html" class="archive-item"><span class="archive-num">Juin</span><span class="archive-title">Avis de Tempête — Juin 2024</span><span class="archive-arrow">→</span></a>
-        <a href="avisdetempete.html" class="archive-item"><span class="archive-num">Mai</span><span class="archive-title">Avis de Tempête — Mai 2024</span><span class="archive-arrow">→</span></a>
-        <a href="avisdetempete.html" class="archive-item"><span class="archive-num">Avr.</span><span class="archive-title">Avis de Tempête — Avril 2024</span><span class="archive-arrow">→</span></a>
-        <a href="avisdetempete.html" class="archive-item"><span class="archive-num">Mars</span><span class="archive-title">Avis de Tempête — Mars 2024</span><span class="archive-arrow">→</span></a>
-        <a href="avisdetempete.html" class="archive-item"><span class="archive-num">Fév.</span><span class="archive-title">Avis de Tempête — Février 2024</span><span class="archive-arrow">→</span></a>
-        <a href="avisdetempete.html" class="archive-item"><span class="archive-num">Jan.</span><span class="archive-title">Avis de Tempête — Janvier 2024</span><span class="archive-arrow">→</span></a>
-      </div>
-    </div>
-    <div class="tempete-right">
-      <div class="tempete-form-wrap">
-        <div class="tempete-wave-deco">
-          <svg viewBox="0 0 300 60" xmlns="http://www.w3.org/2000/svg" style="width:100%;opacity:0.2;">
-            <path d="M0,30 Q37,10 75,30 Q112,50 150,30 Q187,10 225,30 Q262,50 300,30" fill="none" stroke="var(--cream)" stroke-width="2"/>
-            <path d="M0,42 Q37,22 75,42 Q112,62 150,42 Q187,22 225,42 Q262,62 300,42" fill="none" stroke="var(--cream)" stroke-width="1.5"/>
-          </svg>
-        </div>
-        <p style="font-family:'Playfair Display',serif;font-size:1.15rem;font-style:italic;color:var(--cream);margin-bottom:1.5rem;line-height:1.5;">Recevez notre newsletter directement dans votre boîte aux lettres !</p>
-        <label style="display:block;font-family:'Raleway',sans-serif;font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(242,240,239,0.6);margin-bottom:0.4rem;">Prénom</label>
-        <input type="text" id="nlPrenom" placeholder="Marie" style="width:100%;padding:0.75rem 1rem;font-family:'Lora',serif;font-size:0.9rem;border:1.5px solid rgba(242,240,239,0.2);border-radius:3px;background:rgba(242,240,239,0.08);color:var(--cream);outline:none;margin-bottom:1rem;transition:border-color 0.2s;" onfocus="this.style.borderColor='rgba(242,240,239,0.6)'" onblur="this.style.borderColor='rgba(242,240,239,0.2)'" />
-        <label style="display:block;font-family:'Raleway',sans-serif;font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(242,240,239,0.6);margin-bottom:0.4rem;">Adresse e-mail</label>
-        <input type="email" id="nlEmail" placeholder="vous@email.com" style="width:100%;padding:0.75rem 1rem;font-family:'Lora',serif;font-size:0.9rem;border:1.5px solid rgba(242,240,239,0.2);border-radius:3px;background:rgba(242,240,239,0.08);color:var(--cream);outline:none;margin-bottom:1.5rem;transition:border-color 0.2s;" onfocus="this.style.borderColor='rgba(242,240,239,0.6)'" onblur="this.style.borderColor='rgba(242,240,239,0.2)'" />
-        <button onclick="subscribeNewsletter()" style="width:100%;font-family:'Raleway',sans-serif;font-size:0.82rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;background:var(--cream);color:var(--wood-dark);padding:0.9rem;border:none;cursor:pointer;border-radius:2px;transition:all 0.2s;" onmouseover="this.style.background='#fff'" onmouseout="this.style.background='var(--cream)'">
-          🌊 Je m'inscris à l'Avis de Tempête
-        </button>
-        <p style="font-family:'Lora',serif;font-size:0.72rem;font-style:italic;color:rgba(242,240,239,0.4);margin-top:0.8rem;text-align:center;">Pas de spam. Désinscription possible à tout moment.</p>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- FOOTER -->
 <footer id="contact">
   <div>
     <div class="footer-logo">L'Esprit Large</div>
     <p class="footer-desc">Librairie indépendante au cœur de Guérande.</p>
-    <p class="footer-desc" style="margin-top:0.8rem;">📍 12, Rue Vannetaise, 44350 Guérande<br/>📞 02 40 23 44 44 · 📧 <a href="/cdn-cgi/l/email-protection#3854515a4a59514a515d785d4b484a514c1554594a5f5d165b5755" style="color:inherit;"><span class="__cf_email__" data-cfemail="e78b8e8595868e958e82a7829497958e93ca8b86958082c984888a">[email&#160;protected]</span></a></p>
+    <p class="footer-desc" style="margin-top:0.8rem;">📍 12, Rue Vannetaise, 44350 Guérande<br/>📞 02 40 23 44 44 · 📧 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="80ece9e2f2e1e9f2e9e5c0e5f3f0f2e9f4adece1f2e7e5aee3efed">[email&#160;protected]</a></p>
     <p class="footer-desc" style="margin-top:0.8rem;">
       🕐 <strong style="color:var(--amber-light);">Horaires</strong><br/>
       Lun : 14h30 – 18h00<br/>
@@ -902,14 +812,22 @@
     <p class="footer-h">Navigation</p>
     <ul class="footer-links">
       <li onclick="document.getElementById('newsletter').scrollIntoView({behavior:'smooth'})">🌊 Avis de Tempête</li>
-      <li><a href="catalogue.html" style="color:inherit;text-decoration:none;">Catalogue</a></li>
+      <li onclick="document.getElementById('catalogue').scrollIntoView({behavior:'smooth'})">Catalogue</li>
       <li onclick="document.getElementById('coups-de-coeur').scrollIntoView({behavior:'smooth'})">Coups de cœur</li>
       <li onclick="document.getElementById('evenements').scrollIntoView({behavior:'smooth'})">Événements</li>
       <li>Nos services</li>
-      <li><a href="a-propos.html">À propos</a></li>
+      <li>À propos</li>
     </ul>
   </div>
   <div>
+    <p class="footer-h">Infos pratiques</p>
+    <ul class="footer-links">
+      <li>Commande & réservation</li>
+      <li>Carte cadeau</li>
+      <li>🥪 Casse-croûte Littéraire</li>
+      <li>🚲 Livraison locale<br/><span style="font-size:0.75rem;opacity:0.7;font-style:italic;">Gratuite à Guérande sur commande</span></li>
+      <li>Mentions légales</li>
+    </ul>
   </div>
 </footer>
 <div class="footer-bottom">© 2026 L'Esprit Large · Librairie indépendante depuis 2006</div>
@@ -970,134 +888,18 @@
   <span class="toast-icon">✓</span><span id="toastMsg"></span>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 /* ── DATA ── */
-let BOOKS = [];
-
-async function chargerStock() {
-  const grid = document.getElementById('bookGrid');
-  grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;font-style:italic;color:var(--ink-soft);padding:2rem 0;">⏳ Chargement…</p>';
-  try {
-    const r = await fetch('stock.json?t=' + Date.now());
-    if (!r.ok) throw new Error();
-    const data = await r.json();
-    BOOKS = (data.livres || []).map((b, i) => ({
-      id:         i + 1,
-      ean:        b.ean,
-      title:      b.titre,
-      author:     b.auteur,
-      editeur:    b.editeur,
-      genre:      devinerGenre(b.titre, b.auteur, b.editeur),
-      price:      b.prix || '',
-      stock:      b.quantite || 0,
-      couverture: b.couverture || '',
-      fav:        false,
-    }));
-  } catch(e) {
-    grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;font-style:italic;color:var(--ink-soft);padding:2rem 0;">Le catalogue sera bientôt disponible.</p>';
-    // Ne pas bloquer le reste de la page
-    return;
-  }
-  // Page d'accueil : 1 ligne fixe = 5 livres aléatoires en stock (avec ou sans couverture)
-  const enStock = BOOKS.filter(b => b.stock > 0);
-  const apercu = enStock.sort(() => Math.random() - 0.5).slice(0, 5);
-  renderBooks(apercu, true); // true = mode accueil (1 ligne)
-  chargerCoups();
-  chargerBlog();
-}
-
-async function chargerBlog() {
-  const grid = document.getElementById('blogHomeGrid');
-  if (!grid) return;
-  try {
-    const r = await fetch('blog.json?t=' + Date.now());
-    if (!r.ok) throw new Error();
-    const data = await r.json();
-    const articles = (data.articles || [])
-      .sort((a, b) => new Date(b.date) - new Date(a.date))
-      .slice(0, 3); // 3 derniers articles
-
-    if (!articles.length) {
-      grid.innerHTML = '<p class="blog-empty">Aucun article pour le moment — revenez bientôt !</p>';
-      return;
-    }
-
-    grid.innerHTML = articles.map(a => {
-      const imgHtml = a.image
-        ? '<img src="' + a.image + '" alt="' + (a.titre||'').replace(/"/g,'') + '" onerror="this.parentElement.textContent=String.fromCodePoint(128221)">'
-        : '📝';
-      const extrait = (a.texte || '').replace(/<[^>]+>/g, '').slice(0, 160) + '…';
-      const dateLabel = a.date ? new Date(a.date).toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' }) : '';
-      const lienHref  = a.lien || 'blog.html';
-      const lienLabel = a.lien_label || 'Lire la suite';
-      return '<div class="blog-card">' +
-        '<div class="blog-card-img">' + imgHtml + '</div>' +
-        '<div class="blog-card-body">' +
-          (a.categorie ? '<div class="blog-card-cat">' + a.categorie + '</div>' : '') +
-          '<div class="blog-card-titre">' + (a.titre || '') + '</div>' +
-          '<div class="blog-card-extrait">' + extrait + '</div>' +
-          '<div class="blog-card-footer">' +
-            '<span class="blog-card-date">' + dateLabel + '</span>' +
-            '<a href="' + lienHref + '" class="blog-card-lire">' + lienLabel + ' →</a>' +
-          '</div>' +
-        '</div>' +
-      '</div>';
-    }).join('');
-  } catch(e) {
-    grid.innerHTML = '<p class="blog-empty">Impossible de charger les articles.</p>';
-  }
-}
-
-async function chargerCoups() {
-  try {
-    const r = await fetch('coups.json?t=' + Date.now());
-    if (!r.ok) return;
-    const data = await r.json();
-    const eans = (data.coups || []).map(c => c.ean);
-    // Marquer les livres comme favoris dans BOOKS (si présents)
-    BOOKS.forEach(b => { b.fav = eans.includes(b.ean); });
-    // Utiliser directement les infos stockées dans coups.json
-    // (titre, auteur, couverture sont sauvegardés par l'admin — pas besoin de BOOKS)
-    COUPS = (data.coups || []).map((c, i) => ({
-      id:         i + 1,
-      ean:        c.ean,
-      title:      c.titre  || '',
-      author:     c.auteur || '',
-      couverture: c.couverture || '',
-      citation:   c.citation  || '',
-      libraire:   c.libraire  || '',
-    })).filter(c => c.title);
-    renderCoups();
-  } catch(e) {
-    // Pas de coups.json encore — section reste vide
-  }
-}
-
-function devinerGenre(titre, auteur, editeur) {
-  const t = (titre + ' ' + editeur).toLowerCase();
-  if (t.includes('manga') || t.includes('shonen') || t.includes('seinen')) return 'Manga';
-  if (t.includes('bande dessin') || t.includes('bd') || t.includes('comics') || t.includes('dupuis') || t.includes('dargaud') || t.includes('casterman')) return 'Bande dessinée';
-  if (t.includes('jeunesse') || t.includes('école des loisirs') || t.includes('bayard') || t.includes('gallimard jeun') || t.includes('album')) return 'Jeunesse';
-  if (t.includes('policier') || t.includes('thriller') || t.includes('crime') || t.includes('noir')) return 'Policier';
-  if (t.includes('science-fiction') || t.includes('sf ') || t.includes(' sf') || t.includes('fantasy') || t.includes('fantastique')) return 'SF / Fantasy';
-  if (t.includes('poésie') || t.includes('poeme') || t.includes('poème')) return 'Poésie';
-  if (t.includes('document') || t.includes('essai') || t.includes('histoire') || t.includes('biograph')) return 'Essai / Document';
-  return 'Littérature';
-}
+const BOOKS = [
+  { id:1, title:"Le sigisbée ", author:"Mathilde Desaché", genre:"Littérature française", price:"18 €", stock:2, emoji:"📖", color:"#d4956a", fav:true, },
+  { id:2, title:"Les fantômes de Shearwater", author:"Charlotte McConaghy", genre:"Littérature étrangère", price:"23.90 €", stock:2, emoji:"🪞", color:"#8b9e7a", fav:true },
+  { id:3, title:"Petit pas", author:"Marion Richez", genre:"Littérature française", price:"20 €", stock:0, emoji:"🌙", color:"#5c7a9e", fav:true },
+  { id:4, title:"Karl", author:"Cyril Bonin", genre:"Bande-dessinée", price:"22 €", stock:8, emoji:"⭐", color:"#e8c96a", fav:true },
+  { id:5, title:"Mariage fantôme", author:"David Park", genre:"Littérature étrangère", price:"23 €", stock:3, emoji:"🍇", color:"#9e6a8b", fav:true },
+ 
+];
 
 const EVENTS = [
-  {
-    day:"31", month:"Mars", year:"2026", type:"🔒 Fermeture exceptionnelle",
-    title:"Inventaire — Fermeture exceptionnelle",
-    desc:"La librairie est fermée pour inventaire les lundi 31 mars et mardi 1er avril. Nous vous retrouvons le mercredi 2 avril !",
-    time:"Toute la journée", lieu:"Librairie L'Esprit Large", fermeture:true
-  },
-  {
-    day:"01", month:"Avr.", year:"2026", type:"🔒 Fermeture exceptionnelle",
-    title:"Inventaire — Fermeture exceptionnelle",
-    desc:"La librairie est fermée pour inventaire les lundi 31 mars et mardi 1er avril. Nous vous retrouvons le mercredi 2 avril !",
-    time:"Toute la journée", lieu:"Librairie L'Esprit Large", fermeture:true
-  },
   {
     day:"12", month:"Mars", year:"2026", type:"🌍 Littérature traduite",
     title:"Échanges autour du monde hispanophone",
@@ -1223,28 +1025,24 @@ function subscribeNewsletter() {
 }
 
 /* ── RENDER BOOKS ── */
-function renderBooks(books, modeAccueil) {
+function renderBooks(books) {
   const grid = document.getElementById('bookGrid');
   if (books.length === 0) {
     grid.innerHTML = `<p style="font-style:italic;color:var(--ink-soft);grid-column:1/-1;padding:2rem 0;">Aucun livre trouvé pour cette recherche.</p>`;
     return;
   }
-  const liste = modeAccueil ? books.slice(0, 5) : books.slice(0, 60);
-  if (modeAccueil) grid.style.gridTemplateColumns = 'repeat(5, 1fr)';
-  grid.innerHTML = liste.map((b, i) => {
-    const sClass = b.stock > 0 ? 'stock-ok' : 'stock-out';
-    const sLabel = b.stock > 0 ? 'En stock' : 'À la commande';
+  grid.innerHTML = books.map((b, i) => {
+    const stockClass = b.stock === 0 ? 'stock-out' : b.stock <= 2 ? 'stock-low' : 'stock-ok';
+    const stockLabel = b.stock === 0 ? 'Épuisé' : b.stock <= 2 ? `Plus que ${b.stock}` : `${b.stock} en stock`;
     const badge = b.fav ? '<span class="book-badge badge-fav">❤ Coup de cœur</span>' :
-                  b.stock === 0 ? '<span class="book-badge badge-out">À la commande</span>' : '';
+                  b.stock === 0 ? '<span class="book-badge badge-out">Épuisé</span>' :
+                  b.stock <= 2 ? '<span class="book-badge badge-low">Derniers exemplaires</span>' : '';
     const btnClass = b.stock > 0 ? 'available' : 'unavailable';
     const btnLabel = b.stock > 0 ? 'Réserver' : 'Indisponible';
-    const couv = b.couverture
-      ? `<img src="${b.couverture}" alt="${b.title}" style="width:100%;height:100%;object-fit:cover;border-radius:2px;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/><span style="display:none;font-size:2.5rem;align-items:center;justify-content:center;width:100%;height:100%;">📖</span>`
-      : `<span style="font-size:2.5rem;">📖</span>`;
-    return `<div class="book-card" style="animation-delay:${i*0.04}s">
-      <div class="book-cover" style="background:#e8e4e0;position:relative;overflow:hidden;">
+    return `<div class="book-card" style="animation-delay:${i*0.06}s">
+      <div class="book-cover" style="background:${b.color}22;">
         ${badge}
-        ${couv}
+        <span style="font-size:3rem">${b.emoji}</span>
       </div>
       <div class="book-info">
         <div class="book-title">${b.title}</div>
@@ -1252,28 +1050,15 @@ function renderBooks(books, modeAccueil) {
         <span style="font-family:'Raleway',sans-serif;font-size:0.68rem;letter-spacing:.06em;text-transform:uppercase;background:var(--parchment);color:var(--ink-soft);padding:.15rem .5rem;border-radius:2px;">${b.genre}</span>
         <div class="book-footer">
           <span class="book-price">${b.price}</span>
-          <span class="stock-indicator ${sClass}">● ${sLabel}</span>
+          <span class="stock-indicator ${stockClass}">● ${stockLabel}</span>
         </div>
         <button class="btn-reserve ${btnClass}" onclick="openReserve(${b.id})">${btnLabel}</button>
       </div>
     </div>`;
-  }).join('') + (!modeAccueil && books.length > 60 ? `<p style="grid-column:1/-1;text-align:center;font-style:italic;color:var(--ink-soft);padding:1rem 0;">${books.length - 60} autres résultats — affinez votre recherche pour les voir.</p>` : '');
+  }).join('');
 }
 
 /* ── FILTER ── */
-function normaliser(str) {
-  return (str||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
-}
-
-function goSearch() {
-  const q = document.getElementById('searchInput').value.trim();
-  if (q) {
-    window.location.href = 'catalogue.html?q=' + encodeURIComponent(q);
-  } else {
-    window.location.href = 'catalogue.html';
-  }
-}
-
 function filterBooks() {
   const q = document.getElementById('searchInput').value.toLowerCase();
   let books = BOOKS;
@@ -1290,48 +1075,27 @@ function setFilter(genre, el) {
 }
 
 /* ── COUPS DE CŒUR ── */
-let COUPS = [];
-
 function renderCoups() {
   const grid = document.getElementById('coupGrid');
-  if (!COUPS.length) { grid.innerHTML = ''; return; }
-  grid.innerHTML = COUPS.map(c => {
-    const couv = c.couverture
-      ? `<img src="${c.couverture}" alt="${c.title}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'"/>`
-      : `<span style="font-size:2.5rem;">📖</span>`;
-    return `
+  const favs = BOOKS.filter(b => b.fav);
+  grid.innerHTML = favs.map(b => `
     <div class="coup-card">
-      <div class="coup-cover" style="background:#e8e4e0;overflow:hidden;">${couv}</div>
-      <div style="flex:1;">
-        <div class="book-title" style="font-size:1.05rem;">${c.title}</div>
-        <div class="book-author">${c.author}</div>
-        ${c.citation ? `<p style="font-family:'Lora',serif;font-style:italic;font-size:.88rem;color:var(--ink-soft);margin:.5rem 0;line-height:1.6;">"${c.citation}"</p>` : ''}
-        ${c.libraire ? `<p style="font-family:'Raleway',sans-serif;font-size:.7rem;font-weight:600;color:var(--wood);text-transform:uppercase;letter-spacing:.06em;">— ${c.libraire}</p>` : ''}
-        <button class="btn-reserve available" style="width:auto;padding:.5rem 1.2rem;margin-top:.5rem;" onclick="openReserve(${c.id || 0})">Réserver ce livre</button>
+      <div class="coup-cover" style="background:${b.color}33;">${b.emoji}</div>
+      <div>
+        <div class="book-title" style="font-size:1.05rem;">${b.title}</div>
+        <div class="book-author">${b.author}</div>
+        <button class="btn-reserve available" style="width:auto;padding:.5rem 1.2rem;" onclick="openReserve(${b.id})">Réserver ce livre</button>
       </div>
-    </div>`;
-  }).join('');
+    </div>
+  `).join('');
 }
 
 /* ── ÉVÉNEMENTS ── */
 function renderEvents() {
   const list = document.getElementById('eventList');
-  const now = new Date();
-  const MOIS_LONG  = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
-  const MOIS_COURT = ['Jan.','Fév.','Mars','Avr.','Mai','Juin','Juil.','Août','Sep.','Oct.','Nov.','Déc.'];
-  const curLong  = MOIS_LONG[now.getMonth()];
-  const curCourt = MOIS_COURT[now.getMonth()];
-
-  const monthEvents = EVENTS.filter(e => e.month === curLong || e.month === curCourt);
-
-  if (monthEvents.length === 0) {
-    list.innerHTML = `<p style="font-family:'Lora',serif;font-style:italic;color:var(--ink-soft);padding:1rem 0;">Aucun événement ce mois-ci. <a href="evenements.html" style="color:var(--wood);">Voir le calendrier →</a></p>`;
-    return;
-  }
-
-  list.innerHTML = monthEvents.map(e => `
-    <div class="event-card${e.special ? ' event-special' : ''}${e.fermeture ? ' event-fermeture' : ''}">
-      <div class="event-date" style="${e.special ? 'background:var(--amber);' : e.fermeture ? 'background:#888;' : ''}">
+  list.innerHTML = EVENTS.map(e => `
+    <div class="event-card${e.special ? ' event-special' : ''}">
+      <div class="event-date" style="${e.special ? 'background:var(--amber);' : ''}">
         <div class="event-day">${e.day}</div>
         <div class="event-month">${e.month}</div>
         <div class="event-month" style="font-size:0.6rem;opacity:0.7;">${e.year}</div>
@@ -1342,9 +1106,8 @@ function renderEvents() {
         <div class="event-desc">${e.desc}
           <br/><span style="font-family:'Raleway',sans-serif;font-size:0.72rem;color:var(--wood);font-weight:600;margin-top:0.3rem;display:inline-block;">🕐 ${e.time}${e.lieu ? ' · 📍 '+e.lieu : ''}</span>
         </div>
-        ${e.affiche ? `<div style="margin-top:0.6rem;"><img src="evenements/${e.affiche}" alt="Affiche" style="max-height:110px;border-radius:3px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.15);" onclick="openAdt('evenements/${e.affiche}','${e.title.replace(/'/g,"\\'")}')"/></div>` : ''}
       </div>
-      ${e.fermeture ? '' : `<button class="btn-event" onclick="openEventModal('${e.title.replace(/'/g,"\\'")}')">Je m'inscris</button>`}
+      <button class="btn-event" onclick="openEventModal('${e.title.replace(/'/g,"\\'")}')">Je m'inscris</button>
     </div>
   `).join('');
 }
@@ -1394,75 +1157,132 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 3800);
 }
 
+/* ── CLOSE ON BACKDROP ── */
 document.getElementById('reserveModal').addEventListener('click', function(e) { if(e.target === this) closeModal(); });
 document.getElementById('eventModal').addEventListener('click', function(e) { if(e.target === this) closeEventModal(); });
 
-/* ── STOCK LABEL ── */
-// "En stock" ou "À la commande" uniquement
-function stockLabel(qte) {
-  return qte > 0 ? 'En stock' : 'À la commande';
-}
-function stockClass(qte) {
-  return qte > 0 ? 'stock-ok' : 'stock-out';
+/* -- INIT DYNAMIQUE -- */
+function goSearch() {
+  var q = document.getElementById('searchInput').value.trim();
+  if (q) window.location.href = 'catalogue.html?q=' + encodeURIComponent(q);
 }
 
-/* ── INIT ── */
-window.addEventListener('DOMContentLoaded', function() {
-  chargerStock();
-  chargerEvenementsAccueil();
-});
-
-async function chargerEvenementsAccueil() {
-  const list = document.getElementById('eventList');
-  if (!list) return;
+async function chargerBlog() {
+  var grid = document.getElementById('blogHomeGrid');
+  if (!grid) return;
   try {
-    const r = await fetch('evenements.json?t=' + Date.now());
-    if (!r.ok) throw new Error();
-    const data = await r.json();
-    const now = new Date();
-    const moisCourant = now.getMonth() + 1;
-    const anneeCourante = now.getFullYear();
-
-    // Filtrer les événements du mois en cours
-    const evts = (data.evenements || []).filter(e => {
-      const parts = (e.date || '').split('-');
-      return parseInt(parts[1]) === moisCourant && parseInt(parts[0]) === anneeCourante;
-    });
-
-    const MOIS = ['','Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
-
-    if (!evts.length) {
-      list.innerHTML = `<p style="font-family:'Lora',serif;font-style:italic;color:var(--ink-soft);padding:1rem 0;">Aucun événement ce mois-ci. <a href="evenements.html" style="color:var(--wood);">Voir le calendrier →</a></p>`;
+    var results = await Promise.allSettled([
+      fetch('blog.json?t='          + Date.now()),
+      fetch('evenements.json?t='    + Date.now()),
+      fetch('avisdetempete.json?t=' + Date.now()),
+    ]);
+    var rBlog = results[0], rEvt = results[1], rTemp = results[2];
+    var items = [];
+    if (rBlog.status === 'fulfilled' && rBlog.value.ok) {
+      var d = await rBlog.value.json();
+      (d.articles || []).forEach(function(a) { items.push({
+        type:'blog', date:a.date||'', titre:a.titre||'', image:a.image||'',
+        extrait:(a.texte||'').replace(/<[^>]+>/g,'').slice(0,160)+'...',
+        cat:a.categorie||'Article', lien:a.lien||'blog.html', lienLabel:a.lien_label||'Lire la suite',
+      }); });
+    }
+    if (rEvt.status === 'fulfilled' && rEvt.value.ok) {
+      var d = await rEvt.value.json();
+      var today = new Date().toISOString().slice(0,10);
+      (d.evenements || []).filter(function(e){return e.date >= today;})
+        .sort(function(a,b){return a.date.localeCompare(b.date);}).slice(0,2)
+        .forEach(function(e) { items.push({
+          type:'event', date:e.date||'', titre:e.titre||'', image:e.image||'',
+          extrait:e.description||e.lieu||'',
+          cat:'Agenda', lien:'evenements.html', lienLabel:"Voir l'agenda",
+        }); });
+    }
+    if (rTemp.status === 'fulfilled' && rTemp.value.ok) {
+      var d = await rTemp.value.json();
+      var avis = (d.avis || []).sort(function(a,b){return (b.date||'').localeCompare(a.date||'');}).slice(0,1);
+      avis.forEach(function(a) { items.push({
+        type:'tempete', date:a.date||'', titre:a.titre||'Avis de Tempete', image:a.image||'',
+        extrait:(a.texte||a.description||'').replace(/<[^>]+>/g,'').slice(0,160)+'...',
+        cat:'Newsletter', lien:'avisdetempete.html', lienLabel:'Lire le numero',
+      }); });
+    }
+    items.sort(function(a,b){return (b.date||'').localeCompare(a.date||'');});
+    items = items.slice(0,4);
+    if (!items.length) {
+      grid.innerHTML = '<p class="blog-empty">Aucune publication pour le moment — revenez bientôt !</p>';
       return;
     }
-
-    list.innerHTML = evts.map(e => {
-      const parts = (e.date || '').split('-');
-      const jour  = parseInt(parts[2]);
-      const mois  = MOIS[parseInt(parts[1])] || '';
-      return `
-      <div class="event-card${e.special?' event-special':''}${e.fermeture?' event-fermeture':''}">
-        <div class="event-date" style="${e.special?'background:var(--amber);':e.fermeture?'background:#888;':''}">
-          <div class="event-day">${jour}</div>
-          <div class="event-month">${mois}</div>
-          <div class="event-month" style="font-size:0.6rem;opacity:0.7;">${parts[0]}</div>
-        </div>
-        <div class="event-info">
-          <div class="event-type">${e.type||''}${e.recurrent?' · <span style="font-style:italic;font-weight:400;">Récurrent</span>':''}</div>
-          <div class="event-title">${e.titre||''}</div>
-          <div class="event-desc">${e.desc||''}
-            <br/><span style="font-family:'Raleway',sans-serif;font-size:0.72rem;color:var(--wood);font-weight:600;margin-top:0.3rem;display:inline-block;">🕐 ${e.time||''}${e.lieu?' · 📍 '+e.lieu:''}</span>
-          </div>
-          ${e.affiche?`<div style="margin-top:0.6rem;"><img src="evenements/${e.affiche}" alt="Affiche" style="max-height:110px;border-radius:3px;"/></div>`:''}
-        </div>
-        ${e.fermeture?'':`<button class="btn-event" onclick="openEventModal('${(e.titre||'').replace(/'/g,"\'")}')">Je m'inscris</button>`}
-      </div>`;
+    grid.innerHTML = items.map(function(a) {
+      var imgHtml = a.image
+        ? '<img src="' + a.image + '" alt="" onerror="thisparentElement.textContent=String.fromCodePoint(128221)'
+        : (a.type==='event' ? '&#x1F4C5;' : a.type==='tempete' ? '&#x1F30A;' : '&#x1F4DD;');
+      var dateLabel = a.date ? new Date(a.date).toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'}) : '';
+      return '<div class="blog-card">' +
+        '<div class="blog-card-img">' + imgHtml + '</div>' +
+        '<div class="blog-card-body">' +
+          '<div class="blog-card-cat type-' + a.type + '">' + a.cat + '</div>' +
+          '<div class="blog-card-titre">' + a.titre + '</div>' +
+          '<div class="blog-card-extrait">' + a.extrait + '</div>' +
+          '<div class="blog-card-footer">' +
+            '<span class="blog-card-date">' + dateLabel + '</span>' +
+            '<a href="' + a.lien + '" class="blog-card-lire">' + a.lienLabel + ' →</a>' +
+          '</div></div></div>';
     }).join('');
-  } catch(err) {
-    // Fallback sur le tableau EVENTS codé en dur
-    renderEvents();
+  } catch(e) {
+    if (grid) grid.innerHTML = '<p class="blog-empty">Impossible de charger les publications.</p>';
   }
 }
+
+async function chargerCoups() {
+  try {
+    var r = await fetch('coups.json?t=' + Date.now());
+    if (!r.ok) return;
+    var data = await r.json();
+    var grid = document.getElementById('coupGrid');
+    if (!grid) return;
+    var coups = (data.coups || []).filter(function(c){return c.titre;});
+    if (!coups.length) return;
+    grid.innerHTML = coups.map(function(c) {
+      var img = c.couverture
+        ? '<img src="' + c.couverture + '" alt="" style="width:80px;height:116px;object-fit:cover;border-radius:3px;box-shadow:0 4px 12px rgba(0,0,0,.2);">'
+        : '<div style="width:80px;height:116px;background:var(--parchment);border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:2rem;">&#x1F4D6;</div>';
+      return '<div class="coup-card">' +
+        '<div class="coup-cover">' + img + '</div>' +
+        '<div>' +
+          '<div class="book-title" style="font-size:1.05rem;">' + (c.titre||'') + '</div>' +
+          '<div class="book-author">' + (c.auteur||'') + '</div>' +
+          (c.citation ? '<div style="font-family:Lora,serif;font-style:italic;font-size:.82rem;color:var(--ink-soft);margin-top:.5rem;line-height:1.6;">' + c.citation + (c.libraire ? ' — ' + c.libraire : '') + '</div>' : '') +
+        '</div></div>';
+    }).join('');
+  } catch(e) {}
+}
+
+async function chargerApercu() {
+  try {
+    var r = await fetch('stock.json?t=' + Date.now());
+    if (!r.ok) return;
+    var data = await r.json();
+    var livres = (data.livres || []).slice(0, 8);
+    var grid = document.getElementById('catalogueGrid');
+    if (!grid || !livres.length) return;
+    grid.innerHTML = livres.map(function(b) {
+      var cover = b.couverture || b.cover || '';
+      var imgHtml = cover
+        ? '<img src="' + cover + '" alt="' + (b.titre||'').replace(/"/g,'&quot;') + '" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.textContent=String.fromCodePoint(128218)">'
+        : '&#x1F4D6;';
+      return '<div style="background:#fff;border-radius:4px;overflow:hidden;box-shadow:0 2px 8px rgba(42,31,20,.08);cursor:pointer;" onclick="window.location=\'catalogue.html\'">' +
+        '<div style="height:140px;background:var(--parchment);display:flex;align-items:center;justify-content:center;font-size:2.5rem;">' + imgHtml + '</div>' +
+        '<div style="padding:.7rem .9rem;">' +
+          '<div style="font-family:Playfair Display,serif;font-size:.85rem;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + (b.titre||'') + '</div>' +
+          '<div style="font-family:Lora,serif;font-size:.75rem;color:var(--ink-soft);font-style:italic;">' + (b.auteur||'') + '</div>' +
+        '</div></div>';
+    }).join('');
+  } catch(e) {}
+}
+
+chargerBlog();
+chargerCoups();
+chargerApercu();
 </script>
 </body>
 </html>
