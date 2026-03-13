@@ -901,21 +901,59 @@ var Coups = (() => {
     renderList();
   }
 
+  let _editIdx = null;
+
   function renderList() {
     const el = document.getElementById('coupsList');
     if (!items.length) { el.innerHTML = '<p style="font-family:Lora,serif;font-style:italic;font-size:.85rem;color:var(--soft);">Aucun coup de c\u0153ur pour l\u2019instant.</p>'; return; }
-    el.innerHTML = items.map((c, i) => `
-      <div style="display:flex;align-items:center;gap:1rem;padding:.8rem;background:var(--cream);border-radius:4px;margin-bottom:.5rem;border:1px solid rgba(92,26,26,.1);">
+    el.innerHTML = items.map((c, i) => {
+      const editing = _editIdx === i;
+      if (editing) {
+        return `<div style="background:#fff;border:2px solid var(--wood);border-radius:6px;padding:1rem;margin-bottom:.6rem;">
+          <div style="font-family:'Raleway',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--wood);margin-bottom:.8rem;">✏️ Modifier — ${c.titre || c.ean}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.5rem;">
+            <div>
+              <label style="font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#888;display:block;margin-bottom:.2rem;">Catégorie</label>
+              <select id="edit-cat-${i}" style="width:100%;padding:.45rem;font-family:'Lora',serif;font-size:.85rem;border:1.5px solid #ddd;border-radius:3px;background:#fff;">
+                <option value="" ${!c.categorie?'selected':''}>— Choisir —</option>
+                <option value="Roman" ${c.categorie==='Roman'?'selected':''}>Roman</option>
+                <option value="BD" ${c.categorie==='BD'?'selected':''}>BD</option>
+                <option value="Jeunesse" ${c.categorie==='Jeunesse'?'selected':''}>Jeunesse</option>
+                <option value="Essai" ${c.categorie==='Essai'?'selected':''}>Essai</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#888;display:block;margin-bottom:.2rem;">Prénom libraire</label>
+              <input type="text" id="edit-lib-${i}" value="${c.libraire||''}" style="width:100%;padding:.45rem;font-family:'Lora',serif;font-size:.85rem;border:1.5px solid #ddd;border-radius:3px;"/>
+            </div>
+          </div>
+          <div style="margin-bottom:.5rem;">
+            <label style="font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#888;display:block;margin-bottom:.2rem;">Citation</label>
+            <textarea id="edit-cit-${i}" rows="3" style="width:100%;padding:.45rem;font-family:'Lora',serif;font-size:.85rem;border:1.5px solid #ddd;border-radius:3px;resize:vertical;">${c.citation||''}</textarea>
+          </div>
+          <div style="display:flex;gap:.5rem;">
+            <button onclick="Coups.sauvegarderEdit(${i})" style="flex:1;padding:.5rem;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:var(--wood);color:#fff;border:none;border-radius:3px;cursor:pointer;">✅ Sauvegarder</button>
+            <button onclick="Coups.annulerEdit()" style="padding:.5rem 1rem;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:transparent;color:var(--ink-soft);border:1.5px solid #ddd;border-radius:3px;cursor:pointer;">Annuler</button>
+          </div>
+        </div>`;
+      }
+      return `<div style="display:flex;align-items:center;gap:1rem;padding:.8rem;background:var(--cream);border-radius:4px;margin-bottom:.5rem;border:1px solid rgba(92,26,26,.1);">
         ${c.couverture ? `<img src="${c.couverture}" style="width:40px;height:55px;object-fit:cover;border-radius:2px;flex-shrink:0;" onerror="this.style.display='none'"/>` : '<span style="font-size:1.5rem;flex-shrink:0;">📖</span>'}
         <div style="flex:1;min-width:0;">
           <div style="font-family:'Lora',serif;font-size:.88rem;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${c.titre || c.ean}</div>
           <div style="font-size:.72rem;color:var(--soft);">${c.auteur || ''}</div>
           ${c.citation ? `<div style="font-family:'Lora',serif;font-style:italic;font-size:.78rem;color:var(--soft);margin-top:.2rem;">"${c.citation.substring(0,80)}${c.citation.length>80?'…':''}"</div>` : ''}
-          ${c.categorie ? `<div style="font-size:.62rem;font-weight:700;color:#fff;background:var(--wood);border-radius:3px;padding:.1rem .4rem;display:inline-block;text-transform:uppercase;letter-spacing:.06em;">${c.categorie}</div>` : ''}
-          ${c.libraire ? `<div style="font-size:.65rem;font-weight:700;color:var(--wood);text-transform:uppercase;letter-spacing:.06em;">— ${c.libraire}</div>` : ''}
+          <div style="display:flex;gap:.4rem;margin-top:.3rem;align-items:center;flex-wrap:wrap;">
+            ${c.categorie ? `<span style="font-size:.62rem;font-weight:700;color:#fff;background:var(--wood);border-radius:3px;padding:.1rem .4rem;text-transform:uppercase;letter-spacing:.06em;">${c.categorie}</span>` : ''}
+            ${c.libraire ? `<span style="font-size:.65rem;font-weight:700;color:var(--wood);text-transform:uppercase;letter-spacing:.06em;">— ${c.libraire}</span>` : ''}
+          </div>
         </div>
-        <button onclick="Coups.supprimer(${i})" style="flex-shrink:0;background:none;border:none;cursor:pointer;font-size:1.1rem;color:#c0392b;padding:.3rem;" title="Supprimer">🗑</button>
-      </div>`).join('');
+        <div style="display:flex;flex-direction:column;gap:.3rem;flex-shrink:0;">
+          <button onclick="Coups.editer(${i})" style="background:none;border:1px solid rgba(92,26,26,.2);border-radius:3px;cursor:pointer;font-size:.8rem;padding:.25rem .5rem;color:var(--wood);" title="Modifier">✏️</button>
+          <button onclick="Coups.supprimer(${i})" style="background:none;border:none;cursor:pointer;font-size:1rem;color:#c0392b;padding:.25rem;" title="Supprimer">🗑</button>
+        </div>
+      </div>`;
+    }).join('');
   }
 
   async function verifier() {
@@ -975,7 +1013,25 @@ var Coups = (() => {
     if (ok) { toast('🗑️ Retiré.'); renderList(); }
   }
 
-  return { charger, verifier, ajouter, supprimer };
+  function editer(i) {
+    _editIdx = i;
+    renderList();
+  }
+
+  function annulerEdit() {
+    _editIdx = null;
+    renderList();
+  }
+
+  async function sauvegarderEdit(i) {
+    items[i].citation  = document.getElementById('edit-cit-' + i).value.trim();
+    items[i].libraire  = document.getElementById('edit-lib-' + i).value.trim();
+    items[i].categorie = document.getElementById('edit-cat-' + i).value;
+    const ok = await ghWrite('coups.json', { mis_a_jour: new Date().toISOString(), coups: items }, '✏️ Modif coup de cœur : ' + (items[i].titre || items[i].ean));
+    if (ok) { toast('✅ Coup de cœur modifié !'); _editIdx = null; renderList(); }
+  }
+
+  return { charger, verifier, ajouter, supprimer, editer, annulerEdit, sauvegarderEdit };
 })();
 
 // ── INIT ──────────────────────────────────
