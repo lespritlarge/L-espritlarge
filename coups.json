@@ -1,5 +1,5 @@
 {
-  "mis_a_jour": "2026-03-13T13:18:01.446Z",
+  "mis_a_jour": "2026-03-13T13:19:04.232Z",
   "coups": [
     {
       "ean": "9791040806493",
@@ -13,6 +13,14 @@
       "titre": "Arrière-cuisine",
       "couverture": "https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1763621948i/240184316.jpg",
       "citation": "Cuisine et dépendance",
+      "libraire": "Aurélien"
+    },
+    {
+      "ean": "9782290413258",
+      "titre": "Amiante",
+      "auteur": "Sébastien Dulude",
+      "couverture": "https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1766128452i/241531435.jpg",
+      "citation": "Un roman éblouissant touchant à l'universel, où bien plus qu'un minéral toxique, l'amiante se fait le symbole de la dure réalité du monde.",
       "libraire": "Aurélien"
     }
   ]
