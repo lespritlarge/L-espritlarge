@@ -5,6 +5,14 @@
     "description": "Chaque année, la librairie L'Esprit Large récompense un premier roman remarquable. Un prix né de la conviction que les premières voix méritent d'être entendues.",
     "editions": [
       {
+        "annee": 2013,
+        "titre": "La Fabrique du Monde",
+        "auteur": "Sophie Van-der-Linden",
+        "editeur": "Buchet-Castel",
+        "couverture": "https://www.babelio.com/couv/CVT_La-fabrique-du-monde_3049.jpg",
+        "note": ""
+      },
+      {
         "annee": 2025,
         "titre": "Nourrices",
         "auteur": "Séverine Cressan",
@@ -63,41 +71,57 @@
       {
         "annee": 2019,
         "titre": "Tous les enfants dispersés",
-        "auteur": "À compléter",
-        "editeur": "",
-        "couverture": "",
+        "auteur": "  Beata Umubyeyi Mairesse",
+        "editeur": "Autrement",
+        "couverture": "https://www.autrement.com/media/cache/couverture_medium/flammarion_img/Couvertures/9782746751392.jpg",
+        "note": ""
+      },
+      {
+        "annee": 2019,
+        "titre": "Ceux que je suis",
+        "auteur": "Olivier Dorchamps",
+        "editeur": "Finitude",
+        "couverture": "https://www.finitude.fr/wp-content/uploads/2024/11/Ceux-que-je-suis.jpg",
+        "note": ""
+      },
+      {
+        "annee": 2018,
+        "titre": "Les poteaux étaient carrés",
+        "auteur": "Laurent Seyer",
+        "editeur": "Finitude",
+        "couverture": "https://www.finitude.fr/wp-content/uploads/2024/11/Les-poteaux-etaient-carres-Seyer.jpg",
         "note": ""
       },
       {
         "annee": 2017,
-        "titre": "À compléter",
-        "auteur": "À compléter",
-        "editeur": "",
-        "couverture": "",
+        "titre": "Le courage qu'il faut aux rivières",
+        "auteur": "Emmanuelle Favier",
+        "editeur": "Albin Michel",
+        "couverture": "https://www.albin-michel.fr/sites/default/files/styles/extra_large/public/couvertures/albin/Article/Image/2017/9782226400192-j.jpg?itok=vxjPnOct",
         "note": ""
       },
       {
         "annee": 2016,
-        "titre": "À compléter",
-        "auteur": "À compléter",
-        "editeur": "",
-        "couverture": "",
+        "titre": "Hiver à Sokcho",
+        "auteur": "Elisa Shua Dusapin",
+        "editeur": "Zoe",
+        "couverture": "https://m.media-amazon.com/images/I/61we1r2PnsL._UF1000,1000_QL80_.jpg",
         "note": ""
       },
       {
         "annee": 2015,
-        "titre": "À compléter",
-        "auteur": "À compléter",
-        "editeur": "",
-        "couverture": "",
+        "titre": "Djibouti",
+        "auteur": "Pierre Deram",
+        "editeur": "Buchet-Castel",
+        "couverture": "https://libella.awebi-lab.com/quable_medias/livres/9782283029206.jpg",
         "note": ""
       },
       {
         "annee": 2014,
-        "titre": "À compléter",
-        "auteur": "À compléter",
-        "editeur": "",
-        "couverture": "",
+        "titre": "Madame Diogène",
+        "auteur": "Aurélien Delsaux",
+        "editeur": "Albin Michel",
+        "couverture": "https://www.livreshebdo.fr/sites/default/files/styles/book_full_top/public/assets/images/9782226258274.jpg?itok=FfL9zQtH",
         "note": ""
       }
     ]
