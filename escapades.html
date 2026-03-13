@@ -667,5 +667,150 @@ footer a{color:var(--wood);text-decoration:none;}
   </div>
 </footer>
 <div class="footer-bottom">© 2026 L'Esprit Large · Librairie indépendante depuis 2006</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── FORMULE SÉLECTIONNÉE ──────────────────
+
+const formuleData = {
+  petite:    { label: 'Petite Escapade',    prix: '10€/mois',  value: 'Petite Escapade — 10€/mois' },
+  escapade:  { label: 'Escapade',           prix: '20€/mois',  value: 'Escapade — 20€/mois' },
+  grande:    { label: 'Grande Escapade',    prix: '25€/mois',  value: 'Grande Escapade — 25€/mois' },
+  jeune:     { label: 'Jeune Escapade',     prix: '18€/mois',  value: 'Jeune Escapade — 18€/mois' },
+  illustree: { label: 'Escapade Illustrée', prix: '25€/mois',  value: 'Escapade Illustrée — 25€/mois' },
+};
+
+let selectedFormule = null;
+
+function choisirFormule(key, card) {
+  // Mettre à jour les cartes visuelles
+  document.querySelectorAll('.formule-card').forEach(c => c.classList.remove('selected'));
+  card.classList.add('selected');
+  selectedFormule = formuleData[key];
+
+  // Synchroniser le formulaire en bas
+  document.querySelectorAll('.form-formule-opt').forEach(opt => {
+    opt.classList.remove('selected');
+    const radio = opt.querySelector('input[type=radio]');
+    if (radio.value === selectedFormule.value) {
+      opt.classList.add('selected');
+      radio.checked = true;
+    }
+  });
+
+  mettreAJourRecap();
+
+  // Scroll vers le formulaire
+  setTimeout(() => {
+    document.getElementById('inscription').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 300);
+}
+
+function choisirFormuleForm(value, label) {
+  document.querySelectorAll('.form-formule-opt').forEach(o => o.classList.remove('selected'));
+  label.classList.add('selected');
+  // Trouver la formule correspondante
+  selectedFormule = Object.values(formuleData).find(f => f.value === value) || null;
+  mettreAJourRecap();
+}
+
+// ── GENRES ───────────────────────────────
+
+const genresAimes  = new Set();
+const genresEvites = new Set();
+
+function toggleGenre(el, type) {
+  const set = type === 'aime' ? genresAimes : genresEvites;
+  el.classList.toggle('active');
+  if (el.classList.contains('active')) set.add(el.textContent);
+  else set.delete(el.textContent);
+}
+
+// ── RÉCAPITULATIF ─────────────────────────
+
+function mettreAJourRecap() {
+  const prenom = document.getElementById('fPrenom').value.trim();
+  const nom    = document.getElementById('fNom').value.trim();
+  const email  = document.getElementById('fEmail').value.trim();
+  if (!selectedFormule) return;
+  document.getElementById('rFormule').textContent = selectedFormule.label;
+  document.getElementById('rNom').textContent     = [prenom, nom].filter(Boolean).join(' ') || '—';
+  document.getElementById('rEmail').textContent   = email || '—';
+  document.getElementById('rPrix').textContent    = selectedFormule.prix;
+  document.getElementById('recap').classList.add('show');
+}
+
+['fPrenom','fNom','fEmail'].forEach(id => {
+  document.getElementById(id).addEventListener('input', mettreAJourRecap);
+});
+
+// ── SOUMISSION ────────────────────────────
+
+async function soumettre() {
+  const prenom  = document.getElementById('fPrenom').value.trim();
+  const nom     = document.getElementById('fNom').value.trim();
+  const email   = document.getElementById('fEmail').value.trim();
+
+  if (!selectedFormule) { toast('⚠️ Veuillez choisir une formule.'); return; }
+  if (!prenom) { toast('⚠️ Veuillez indiquer votre prénom.'); return; }
+  if (!email || !email.includes('@')) { toast('⚠️ Veuillez indiquer un email valide.'); return; }
+
+  const btn = document.getElementById('btnSubmit');
+  btn.disabled = true;
+  btn.textContent = '⏳  Envoi en cours…';
+
+  const body = {
+    formule:    selectedFormule.value,
+    prenom,
+    nom,
+    email,
+    telephone:  document.getElementById('fTel').value.trim(),
+    pour:       document.getElementById('fPour').value,
+    genres_aimes:  [...genresAimes].join(', ') || 'Non précisé',
+    genres_evites: [...genresEvites].join(', ') || 'Non précisé',
+    livres_aimes:  document.getElementById('fAimes').value.trim() || 'Non précisé',
+    livres_evites: document.getElementById('fEvites').value.trim() || 'Non précisé',
+    message:    document.getElementById('fMessage').value.trim(),
+    _subject:   `Nouvelle Escapade : ${selectedFormule.label} — ${prenom} ${nom}`,
+  };
+
+  try {
+    const res = await fetch('https://formspree.io/f/mvzwkqzn', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    const data = await res.json();
+    if (data.ok) {
+      document.getElementById('sPrenom').textContent = prenom;
+      document.getElementById('sEmail').textContent  = email;
+      document.getElementById('theForm').style.display = 'none';
+      document.getElementById('successMsg').classList.add('show');
+      window.scrollTo({ top: document.getElementById('inscription').offsetTop - 100, behavior: 'smooth' });
+    } else {
+      toast('⚠️ Une erreur est survenue. Réessayez ou appelez-nous au 02 40 23 44 44.');
+      btn.disabled = false;
+      btn.innerHTML = '✉️ &nbsp; Envoyer ma demande d\'inscription';
+    }
+  } catch(e) {
+    toast('⚠️ Erreur réseau. Vérifiez votre connexion.');
+    btn.disabled = false;
+    btn.innerHTML = '✉️ &nbsp; Envoyer ma demande d\'inscription';
+  }
+}
+
+// ── TOAST ─────────────────────────────────
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 4000);
+}
+
+// Synchroniser si on revient via le hash #formules
+if (location.hash === '#inscription') {
+  document.getElementById('inscription').scrollIntoView();
+}
+</script>
 </body>
 </html>
