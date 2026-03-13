@@ -267,7 +267,49 @@
         "auteur": "Valentine Cuny-Le Callet",
         "editeur": "Delcourt",
         "couverture": "https://www.editions-delcourt.fr/sites/default/files/product/9782413044932.jpg",
-        "note": ""
+        "note": "",
+        "selection": [
+          {
+            "titre": "Perpendiculaire au soleil",
+            "auteur": "Valentine Cuny-Le Callet",
+            "couverture": "https://www.editions-delcourt.fr/sites/default/files/product/9782413044932.jpg"
+          },
+          {
+            "titre": "Voleuse",
+            "auteur": "Lucie Bryon",
+            "couverture": "https://editions-sarbacane.com/media/pages/bd/voleuse/88b4da92d6-1686082155/voleuse-600x.jpg"
+          },
+          {
+            "titre": "Immonde!",
+            "auteur": "Elizabeth Holleville",
+            "couverture": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkf3TB5qDDrVPj9u2EUwwmLnVLVxiMb1bG4Q&s"
+          },
+          {
+            "titre": "Être montagne",
+            "auteur": "Jacopo Starace",
+            "couverture": "https://editions-sarbacane.com/media/pages/bd/etre-montagne/3b084d86fa-1686082416/couverture-etre-montagne-finale-web-600x.jpg"
+          },
+          {
+            "titre": "Keeping two",
+            "auteur": "Jordan Crane",
+            "couverture": "https://the-comics-journal.sfo3.digitaloceanspaces.com/wp-content/uploads/2022/06/KeepingTwo_cover-e1654235550807.jpg"
+          },
+          {
+            "titre": "Diana & Charlie",
+            "auteur": "Elias Ericson",
+            "couverture": "https://www.planetebd.com/dynamicImages/album/cover/large/47/62/album-cover-large-47622.jpg"
+          },
+          {
+            "titre": "Morgane Fox",
+            "auteur": "Louise Laborie",
+            "couverture": "https://editions-sarbacane.com/media/pages/bd/morgane-fox/0f6fc8f1f6-1686082214/morgane-fox-600x.jpg"
+          },
+          {
+            "titre": "L'entaille",
+            "auteur": "Antoine Maillard",
+            "couverture": "https://www.bdfugue.com/media/catalog/product/cache/1f6f2b21905e2338a7ddd5f5557a2426/9/7/9782360811793_1_75.jpg"
+          }
+        ]
       }
     ]
   }
