@@ -24,9 +24,6 @@ body{font-family:'Lora',serif;background:var(--warm);color:var(--ink);overflow-x
 
 /* ── NAV ── */
 
-
-
-
 /* ── HERO ── */
 .hero {
   margin-top:80px;
@@ -306,20 +303,9 @@ footer a{color:var(--wood);text-decoration:none;}
   .section-form{padding:3rem 1.2rem;}
   .section-how{padding:3rem 1.2rem;}
 }
-@media(max-width:800px){ }
 
-    /* FOOTER */
-    .site-footer { background:#5c1a1a; color:#f2f0ef; padding:3rem 4rem; display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:2rem; margin-top:3rem; }
-    .site-footer-bottom { background:#3a0e0e; text-align:center; font-size:.72rem; padding:.8rem; opacity:.5; font-family:'Raleway',sans-serif; color:#f2f0ef; }
-    .site-footer .f-logo { font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:800; font-style:italic; margin-bottom:.6rem; }
-    .site-footer .f-desc { font-size:.82rem; opacity:.65; line-height:1.7; }
-    .site-footer .f-desc a { color:#f2f0ef; }
-    .site-footer .f-h { font-family:'Raleway',sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.15em; text-transform:uppercase; color:#b86060; margin-bottom:.8rem; }
-    .site-footer .f-links { list-style:none; }
-    .site-footer .f-links li { margin-bottom:.4rem; }
-    .site-footer .f-links a { font-size:.82rem; opacity:.7; text-decoration:none; color:#f2f0ef; transition:opacity .2s; }
-    .site-footer .f-links a:hover { opacity:1; }
-  @media(max-width:800px){ }
+    /* NAV */
+    @media(max-width:800px){ }
 
     /* FOOTER */
     .site-footer { background:#5c1a1a; color:#f2f0ef; padding:3rem 4rem; display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:2rem; margin-top:3rem; }
@@ -646,7 +632,7 @@ footer a{color:var(--wood);text-decoration:none;}
   <div>
     <div class="f-logo">L'Esprit Large</div>
     <p class="f-desc">Librairie indépendante au cœur de Guérande.</p>
-    <p class="f-desc" style="margin-top:.8rem;">📍 12, Rue Vannetaise, 44350 Guérande<br/>📞 02 40 23 44 44<br/>📧 <a href="mailto:contact@esprit-large.com">contact@esprit-large.com</a></p>
+    <p class="f-desc" style="margin-top:.8rem;">📍 12, Rue Vannetaise, 44350 Guérande<br/>📞 02 40 23 44 44<br/>📧 <a href="/cdn-cgi/l/email-protection#98fbf7f6ecf9fbecd8fdebe8eaf1ecb5f4f9eafffdb6fbf7f5"><span class="__cf_email__" data-cfemail="8be8e4e5ffeae8ffcbeef8fbf9e2ffa6e7eaf9eceea5e8e4e6">[email&#160;protected]</span></a></p>
     <p class="f-desc" style="margin-top:.8rem;">🕐 <strong style="color:#b86060;">Horaires</strong><br/>Lun : 14h30–18h00<br/>Mar/Mer/Ven/Sam : 9h30–19h00<br/>Jeu : 9h30–12h30 &amp; 14h30–18h30<br/>Dim &amp; Fériés : fermé</p>
   </div>
   <div>
@@ -674,11 +660,10 @@ footer a{color:var(--wood);text-decoration:none;}
   </div>
 </footer>
 <div class="site-footer-bottom">© 2026 L'Esprit Large · Librairie indépendante depuis 2006</div>
-<div class="site-footer-bottom">© 2026 L'Esprit Large · Librairie indépendante depuis 2006</div>
 
 <div class="toast" id="toast"></div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 // ── FORMULE SÉLECTIONNÉE ──────────────────
 
 const formuleData = {
@@ -811,7 +796,8 @@ async function soumettre() {
 // ── TOAST ─────────────────────────────────
 function toast(msg) {
   const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show'); setTimeout(function(){ t.classList.remove('show'); }, 3800);
+  t.textContent = msg; t.classL
+ist.add('show'); setTimeout(function(){ t.classList.remove('show'); }, 3800);
 }
 </script>
 </body>
