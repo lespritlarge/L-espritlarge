@@ -378,7 +378,6 @@ footer a{color:var(--wood);text-decoration:none;}
     <li><a href="https://esprit-large.com/evenements.html">Événements</a></li>
     <li><a href="https://esprit-large.com/blog.html">Blog</a></li>
     <li><a href="https://esprit-large.com/avisdetempete.html">🌊 Avis de Tempête</a></li>
-    <li><a href="https://esprit-large.com/escapades.html" class="nav-active">🧳 Escapades</a></li>
     <li><a href="https://esprit-large.com/prix.html">🏆 Nos Prix</a></li>
     <li><a href="https://esprit-large.com/a-propos.html">À propos</a></li>
   </ul>
@@ -698,7 +697,7 @@ footer a{color:var(--wood);text-decoration:none;}
 
 <div class="toast" id="toast"></div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 // ── FORMULE SÉLECTIONNÉE ──────────────────
 
 const formuleData = {
@@ -831,7 +830,7 @@ async function soumettre() {
 // ── TOAST ─────────────────────────────────
 function toast(msg) {
   const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show'); setTimeout(function(){t.classList.remove('show');},3800);
+  t.textContent = msg; t.classList.add('show'); setTimeout(function(){ t.classList.remove('show'); }, 3800);
 }
 </script>
 </body>
