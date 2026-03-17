@@ -526,12 +526,10 @@ function encodeContent(data) {
 
 async function ghGetSha(file, token) {
   // Lit le SHA réel depuis l'API GitHub avec anti-cache strict
-  const r = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${file}?t=${Date.now()}`, {
+  const r = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${file}`, {
     headers: {
       'Authorization': `Bearer ${token}`,
-      'Accept': 'application/vnd.github+json',
-      'Cache-Control': 'no-cache, no-store',
-      'Pragma': 'no-cache'
+      'Accept': 'application/vnd.github+json'
     }
   });
   if (r.ok) { const d = await r.json(); return d.sha; }
@@ -556,6 +554,8 @@ async function ghWrite(file, data, message) {
 
     const r = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${file}`, {
       method: 'PUT',
+      mode: 'cors',
+      credentials: 'omit',
       headers: {
         'Authorization': `Bearer ${token}`,
         'Accept': 'application/vnd.github+json',
@@ -1202,6 +1202,8 @@ var Tempete = (() => {
 
       const r = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${chemin}`, {
         method: 'PUT',
+        mode: 'cors',
+        credentials: 'omit',
         headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       });
