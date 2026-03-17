@@ -1,5 +1,5 @@
 {
-  "mis_a_jour": "2026-03-17T11:36:51.072Z",
+  "mis_a_jour": "2026-03-17T12:06:26.455Z",
   "coups": [
     {
       "ean": "9791040806493",
@@ -53,7 +53,8 @@
       "couverture": "https://couverture.geobib.fr/api/v1/9782848056012/large",
       "citation": "Un roman coup de poing, à lire en apnée...",
       "libraire": "Aurélien",
-      "categorie": "Roman"
+      "categorie": "Roman",
+      "epingle": true
     },
     {
       "ean": "9791037116048",
