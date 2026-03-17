@@ -1,5 +1,5 @@
 {
-  "mis_a_jour": "2026-03-17T12:06:26.455Z",
+  "mis_a_jour": "2026-03-17T12:06:28.959Z",
   "coups": [
     {
       "ean": "9791040806493",
@@ -63,7 +63,8 @@
       "couverture": "https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1764143539i/241324132.jpg",
       "citation": "Sur deux époques...",
       "libraire": "Nadine",
-      "categorie": "Roman"
+      "categorie": "Roman",
+      "epingle": true
     }
   ]
 }
