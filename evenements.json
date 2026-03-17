@@ -1,5 +1,5 @@
 {
-  "mis_a_jour": "2026-03-12T18:34:53.024Z",
+  "mis_a_jour": "2026-03-17T12:06:08.592Z",
   "evenements": [
     {
       "titre": "Les lectures d'Adel",
@@ -158,19 +158,6 @@
       "recurrent": true
     },
     {
-      "titre": "Fête de la librairie indépendante !",
-      "time": "Toute la journée",
-      "type": "Autre",
-      "lieu": "Librairie L'Esprit Large",
-      "desc": "Dans toute la France, on célèbre les librairies indépendantes et leurs libraires!",
-      "affiche": "",
-      "special": false,
-      "fermeture": false,
-      "id": "1773234352126",
-      "date": "2026-04-15",
-      "recurrent": false
-    },
-    {
       "titre": "Les lectures d'Adel",
       "time": "10h30-12h",
       "type": "Lecture hebdo 📖",
@@ -182,6 +169,19 @@
       "id": "mmm6hm5w_r5",
       "date": "2026-04-22",
       "recurrent": true
+    },
+    {
+      "titre": "Fête de la librairie indépendante !",
+      "time": "Toute la journée",
+      "type": "Autre",
+      "lieu": "Librairie L'Esprit Large",
+      "desc": "Dans toute la France, on célèbre les librairies indépendantes et leurs libraires!",
+      "affiche": "",
+      "special": false,
+      "fermeture": false,
+      "id": "1773234352126",
+      "date": "2026-04-25",
+      "recurrent": false
     },
     {
       "titre": "Les lectures d'Adel",
