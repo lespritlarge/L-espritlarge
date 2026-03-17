@@ -194,7 +194,7 @@ details[open] .rblock summary::before{transform:rotate(90deg);}
               <div id="adtGalerie" style="display:none;margin-top:.8rem;border:1.5px solid rgba(92,26,26,.15);border-radius:6px;background:var(--cream);padding:.8rem;">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem;">
                   <span style="font-family:'Raleway',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--wood);">Choisir une image</span>
-                  <button type="button" onclick="document.getElementById('adtGalerie').style.display='none'" style="background:none;border:none;cursor:pointer;font-size:1rem;color:var(--ink-soft);">✕</button>
+                  <button type="button" onclick="Blog.fermerGalerieAdt()" style="background:none;border:none;cursor:pointer;font-size:1rem;color:var(--ink-soft);">✕</button>
                 </div>
                 <div id="adtGalerieGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:.5rem;">
                   <p style="font-style:italic;font-size:.8rem;color:var(--soft);">Chargement…</p>
@@ -663,38 +663,56 @@ var Blog = (() => {
 
 
   async function ouvrirGalerieAdt() {
-    const galerie = document.getElementById('adtGalerie');
-    const grid    = document.getElementById('adtGalerieGrid');
-    galerie.style.display = 'block';
-    grid.innerHTML = '<p style="font-style:italic;font-size:.8rem;color:var(--soft);">Chargement...</p>';
+    var galerie = document.getElementById("adtGalerie");
+    var grid    = document.getElementById("adtGalerieGrid");
+    galerie.style.display = "block";
+    grid.innerHTML = "<p style=\"font-style:italic;font-size:.8rem;\">Chargement...</p>";
     try {
-      const r = await fetch('https://raw.githubusercontent.com/lespritlarge/lespritlarge.github.io/main/avisdetempete.json?t=' + Date.now());
+      var r = await fetch("https://raw.githubusercontent.com/lespritlarge/lespritlarge.github.io/main/avisdetempete.json?t=" + Date.now());
       if (!r.ok) throw new Error();
-      const data = await r.json();
-      const numeros = data.numeros || [];
+      var data = await r.json();
+      var numeros = data.numeros || [];
       if (!numeros.length) {
-        grid.innerHTML = '<p style="font-style:italic;font-size:.8rem;">Aucune image disponible.</p>';
+        grid.innerHTML = "<p style=\"font-style:italic;font-size:.8rem;\">Aucune image disponible.</p>";
         return;
       }
-      grid.innerHTML = numeros.map(n => {
-        const fullUrl = 'https://raw.githubusercontent.com/lespritlarge/lespritlarge.github.io/main/avisdetempete/' + n.fichier;
-        return '<div onclick="Blog.choisirImageAdt('' + fullUrl + '')" style="cursor:pointer;border-radius:4px;overflow:hidden;border:2px solid transparent;transition:border-color .2s;" onmouseover="this.style.borderColor='var(--wood)'" onmouseout="this.style.borderColor='transparent'">'
-          + '<img src="' + fullUrl + '" style="width:100%;aspect-ratio:3/4;object-fit:cover;display:block;" loading="lazy" />'
-          + '<div style="font-size:.6rem;text-align:center;padding:.2rem;font-family:Raleway,sans-serif;color:var(--soft);">' + n.mois + ' ' + n.annee + '</div>'
-          + '</div>';
-      }).join('');
+      // Construire via DOM pour éviter tout problème de quotes
+      grid.innerHTML = "";
+      numeros.forEach(function(n) {
+        var fullUrl = "https://raw.githubusercontent.com/lespritlarge/lespritlarge.github.io/main/avisdetempete/" + n.fichier;
+        var div = document.createElement("div");
+        div.style.cssText = "cursor:pointer;border-radius:4px;overflow:hidden;border:2px solid transparent;transition:border-color .2s;";
+        div.dataset.url = fullUrl;
+        div.addEventListener("mouseenter", function(){ this.style.borderColor = "#8b2e2e"; });
+        div.addEventListener("mouseleave", function(){ this.style.borderColor = "transparent"; });
+        div.addEventListener("click", function(){ Blog.choisirImageAdt(this.dataset.url); });
+        var img = document.createElement("img");
+        img.src = fullUrl;
+        img.style.cssText = "width:100%;aspect-ratio:3/4;object-fit:cover;display:block;";
+        img.loading = "lazy";
+        var label = document.createElement("div");
+        label.style.cssText = "font-size:.6rem;text-align:center;padding:.2rem;font-family:Raleway,sans-serif;";
+        label.textContent = n.mois + " " + n.annee;
+        div.appendChild(img);
+        div.appendChild(label);
+        grid.appendChild(div);
+      });
     } catch(e) {
-      grid.innerHTML = '<p style="font-style:italic;font-size:.8rem;">Impossible de charger les images.</p>';
+      grid.innerHTML = "<p style=\"font-style:italic;font-size:.8rem;\">Impossible de charger les images.</p>";
     }
   }
 
-  function choisirImageAdt(url) {
-    document.getElementById('bImage').value = url;
+    function choisirImageAdt(url) {
+    document.getElementById('bImage').value = url || '';
     document.getElementById('adtGalerie').style.display = 'none';
     toast('Image selectionnee !');
   }
 
-  return { charger, select, nouveau, sauvegarder, supprimer, ouvrirGalerieAdt, choisirImageAdt };
+  function fermerGalerieAdt() {
+    document.getElementById('adtGalerie').style.display = 'none';
+  }
+
+  return { charger, select, nouveau, sauvegarder, supprimer, ouvrirGalerieAdt, choisirImageAdt, fermerGalerieAdt };
 })();
 
 // ══════════════════════════════════════════
