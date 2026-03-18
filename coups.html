@@ -264,6 +264,20 @@ function goPage(p) {
   window.scrollTo({ top: document.getElementById('coups-grid').offsetTop - 80, behavior: 'smooth' });
 }
 
+async function charger() {
+  try {
+    var r = await fetch('https://raw.githubusercontent.com/lespritlarge/lespritlarge.github.io/main/coups.json?t=' + Date.now());
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    var data = await r.json();
+    var tous = data.coups || [];
+    var ep = tous.filter(function(x){ return x.epingle; });
+    tousLesCoups = ep.concat(tous.filter(function(x){ return !x.epingle; }));
+    renderCoups();
+  } catch(e) {
+    document.getElementById('coups-grid').innerHTML = '<div class="coups-vide">Impossible de charger les coups de cœur.</div>';
+  }
+}
+
 charger();
 </script>
 
