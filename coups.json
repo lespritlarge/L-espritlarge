@@ -1,5 +1,5 @@
 {
-  "mis_a_jour": "2026-03-18T16:38:22.677Z",
+  "mis_a_jour": "2026-03-18T16:39:28.646Z",
   "coups": [
     {
       "ean": "9791040806493",
@@ -101,6 +101,15 @@
       "couverture": "https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1765037065i/242053751.jpg",
       "citation": "Ovni littéraire comme Choplin sait si bien le faire...",
       "libraire": "Nadine",
+      "categorie": "Roman"
+    },
+    {
+      "ean": "9791037114693",
+      "titre": "Éclaircie : roman",
+      "auteur": "Carys Davies",
+      "couverture": "https://couverture.geobib.fr/api/v1/9791037114693/large",
+      "citation": "Encore une île, il parait que j'aime ça les histoires qui se passent sur des îles...",
+      "libraire": "Aurélien",
       "categorie": "Roman"
     }
   ]
