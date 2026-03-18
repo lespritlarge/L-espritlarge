@@ -1,5 +1,5 @@
 {
-  "mis_a_jour": "2026-03-18T16:36:00.308Z",
+  "mis_a_jour": "2026-03-18T16:36:29.813Z",
   "coups": [
     {
       "ean": "9791040806493",
@@ -91,6 +91,15 @@
       "auteur": "Charlotte McConaghy",
       "couverture": "https://books.google.com/books/content?id=hXTX0QEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
       "citation": "a famille Salt : un père et ses trois enfants, gardienne du phare et de la réserve, vit coupée du monde depuis huit ans, hantée par la mort de la mère. Lorsque Rowan, une naufragée, s’échoue sur l’île en pleine tempête, l’équilibre fragile du clan vacille. Qui est-elle ? Que sait-elle ?",
+      "libraire": "Aurélien",
+      "categorie": "Roman"
+    },
+    {
+      "ean": "9782351783238",
+      "titre": "La voie",
+      "auteur": "Gabriel Tallent",
+      "couverture": "https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1758690238i/242003005.jpg",
+      "citation": "17:36\n\nDeux ados cabossés s'élèvent sur les parois d'une Amérique oubliée. Tallent signe un roman âpre et lumineux sur l'amitié et le dépassement de soi, écrit comme une ascension.",
       "libraire": "Aurélien",
       "categorie": "Roman"
     }
