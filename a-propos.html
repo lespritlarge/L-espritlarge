@@ -172,6 +172,8 @@
     .footer-links a:hover { opacity:1; }
     .footer-bottom { background:#3a0e0e; text-align:center; font-size:.72rem; padding:.8rem; opacity:.5; font-family:'Raleway',sans-serif; }
   @media(max-width:800px){ }
+        .partner-photo { width:auto; max-width:160px; max-height:60px; object-fit:contain; display:block; margin:0 auto; }
+
     /* NAV */
     nav { position:sticky; top:0; z-index:100; background:var(--wood-dark,#5c1a1a); display:flex; align-items:center; justify-content:space-between; padding:0.7rem 2.5rem; box-shadow:0 2px 12px rgba(0,0,0,.3); }
     .nav-logo { display:flex; align-items:center; gap:.55rem; text-decoration:none; flex-shrink:0; }
@@ -329,7 +331,7 @@
         if (partenaires.length) {
           partenairesGrid.innerHTML = partenaires.map(p => `
             <div class="partner-card">
-              ${p.photo ? `<img class="partner-photo" src="${p.photo}" alt="${p.nom||''}" />` : ''}
+              ${p.photo ? `<div style="text-align:center;padding:.5rem 0;"><img class="partner-photo" src="${p.photo}" alt="${p.nom||\'\'}" /></div>` : ''}
               ${p.emoji ? `<div class="partner-emoji">${p.emoji}</div>` : ''}
               <div class="partner-nom">${p.nom || ''}</div>
               ${p.accroche ? `<div class="partner-accroche">${p.accroche}</div>` : ''}
