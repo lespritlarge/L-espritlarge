@@ -1,5 +1,5 @@
 {
-  "mis_a_jour": "2026-03-18T15:17:33.717Z",
+  "mis_a_jour": "2026-03-18T15:17:44.018Z",
   "coups": [
     {
       "ean": "9791040806493",
@@ -82,7 +82,8 @@
       "couverture": "https://couverture.geobib.fr/api/v1/9782375024515/large",
       "citation": "Course poursuite en montagne et vie de chien...",
       "libraire": "Aurélien",
-      "categorie": "Roman"
+      "categorie": "Roman",
+      "epingle": true
     }
   ]
 }
