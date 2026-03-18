@@ -4,8 +4,9 @@
   <meta charset="UTF-8" />
   <link rel="icon" type="image/png" href="images/logo.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Coups de coeur — L'Esprit Large</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,800;0,900;1,400&family=Lora:ital,wght@0,400;0,500;1,400&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <title>Coups de cœur — Librairie L'Esprit Large</title>
+  <meta name="description" content="Les coups de cœur de l'équipe de la Librairie L'Esprit Large à Guérande." />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&family=Lora:ital@0;1&family=Raleway:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
 :root {
       --cream:#f2f0ef; --warm-white:#f7f5f4;
@@ -40,6 +41,15 @@
     .coup-libraire { font-family:'Raleway',sans-serif; font-size:.65rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--wood); }
     .coups-vide { grid-column:1/-1; text-align:center; padding:4rem 2rem; font-style:italic; color:var(--ink-soft); }
     @media(max-width:600px) { .coups-grid { grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:1rem; } }
+    /* ── PAGINATION ── */
+    .coups-pagination { display:flex; justify-content:center; align-items:center;
+      gap:.4rem; padding:2rem 0 1rem; flex-wrap:wrap; }
+    .page-btn { font-family:'Raleway',sans-serif; font-size:.78rem; font-weight:600;
+      padding:.45rem .85rem; border:1.5px solid var(--parchment); background:#fff;
+      color:var(--ink-soft); cursor:pointer; border-radius:3px; transition:all .2s;
+      min-width:2.2rem; text-align:center; }
+    .page-btn:hover, .page-btn.active { background:var(--wood); color:#fff; border-color:var(--wood); }
+    .page-btn:disabled { opacity:.3; cursor:not-allowed; }
 
 
     /* NAV */
@@ -86,6 +96,8 @@
   </ul>
 </nav>
 
+
+
 <div class="page-hero">
   <div class="page-hero-label">&#10022; L'Esprit Large</div>
   <h1>Nos Coups de c&#339;ur</h1>
@@ -107,111 +119,6 @@
   </div>
 </div>
 
-<script>
-var tousLesCoups = [];
-var filtreActif = 'tous';
-var EMOJI = { Roman: '&#x1F4D6;', BD: '&#x1F3A8;', Jeunesse: '&#x1F31F;', Essai: '&#x1F4A1;' };
-
-function filtrer(cat, btn) {
-  filtreActif = cat;
-  document.querySelectorAll('.filtre-btn').forEach(function(b) { b.classList.remove('active'); });
-  btn.classList.add('active');
-  renderCoups();
-}
-
-function renderCoups() {
-  var grid = document.getElementById('coups-grid');
-  var countEl = document.getElementById('coups-count');
-  var visibles = filtreActif === 'tous'
-    ? tousLesCoups
-    : tousLesCoups.filter(function(c) { return c.categorie === filtreActif; });
-  var nb = visibles.length;
-  countEl.textContent = nb + ' coup' + (nb > 1 ? 's' : '') + ' de coeur';
-  if (!nb) {
-    grid.innerHTML = '<div class="coups-vide">Aucun coup de coeur dans cette cat&#233;gorie.</div>';
-    return;
-  }
-  // Construire le HTML sans apostrophes imbriquees
-  var frag = document.createDocumentFragment();
-  visibles.forEach(function(c) {
-    var card = document.createElement('div');
-    card.className = 'coup-card';
-
-    // Wrap couverture
-    var wrap = document.createElement('div');
-    wrap.className = 'coup-cover-wrap';
-
-    if (c.couverture) {
-      var img = document.createElement('img');
-      img.className = 'coup-cover';
-      img.src = c.couverture;
-      img.alt = c.titre || '';
-      img.loading = 'lazy';
-      img.onerror = function() {
-        var ph = document.createElement('div');
-        ph.className = 'coup-cover-ph';
-        ph.textContent = EMOJI[c.categorie] || '&#x1F4D6;';
-        this.parentNode.replaceChild(ph, this);
-      };
-      wrap.appendChild(img);
-    } else {
-      var ph = document.createElement('div');
-      ph.className = 'coup-cover-ph';
-      ph.textContent = EMOJI[c.categorie] || '&#x1F4D6;';
-      wrap.appendChild(ph);
-    }
-
-    if (c.categorie) {
-      var badge = document.createElement('div');
-      badge.className = 'coup-cat-badge';
-      badge.textContent = c.categorie;
-      wrap.appendChild(badge);
-    }
-    card.appendChild(wrap);
-
-    // Body
-    var body = document.createElement('div');
-    body.className = 'coup-body';
-
-    var titre = document.createElement('div');
-    titre.className = 'coup-titre';
-    titre.textContent = c.titre || '(Sans titre)';
-    body.appendChild(titre);
-
-    if (c.auteur) {
-      var auteur = document.createElement('div');
-      auteur.className = 'coup-auteur';
-      auteur.textContent = c.auteur;
-      body.appendChild(auteur);
-    }
-    if (c.citation) {
-      var cit = document.createElement('div');
-      cit.className = 'coup-citation';
-      cit.textContent = c.citation;
-      body.appendChild(cit);
-    }
-    if (c.libraire) {
-      var lib = document.createElement('div');
-      lib.className = 'coup-libraire';
-      lib.textContent = '\u2014 ' + c.libraire;
-      body.appendChild(lib);
-    }
-    card.appendChild(body);
-    frag.appendChild(card);
-  });
-  grid.innerHTML = '';
-  grid.appendChild(frag);
-}
-
-async function charger() {
-  try {
-    var r = await fetch('https://raw.githubusercontent.com/lespritlarge/lespritlarge.github.io/main/coups.json?t=' + Date.now());
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    var data = await 
-}
-charger();
-</script>
-
 <footer class="site-footer" id="contact">
   <div>
     <div class="f-logo">L'Esprit Large</div>
@@ -227,25 +134,175 @@ charger();
       <li><a href="https://esprit-large.com/evenements.html">Événements</a></li>
       <li><a href="https://esprit-large.com/blog.html">Blog</a></li>
       <li><a href="https://esprit-large.com/avisdetempete.html">🌊 Avis de Tempête</a></li>
-      <li><a href="https://esprit-large.com/escapades.html">🧳 Escapades</a></li>
+      <li><a href="https://esprit-large.com/escapades.html">Les Escapades</a></li>
       <li><a href="https://esprit-large.com/prix.html">🏆 Nos Prix</a></li>
       <li><a href="https://esprit-large.com/a-propos.html">À propos</a></li>
     </ul>
   </div>
   <div>
-    <p class="f-h">Commander en ligne</p>
+    <p class="f-h">Infos pratiques</p>
     <ul class="f-links">
-      <li><a href="https://www.placedeslibraires.fr/" target="_blank" rel="noopener">📦 Place des Libraires</a></li>
-      <li><a href="https://www.librairies-alip.fr/" target="_blank" rel="noopener">📦 Librairies Alip</a></li>
-    </ul>
-    <p class="f-h" style="margin-top:1.2rem;">Nous suivre</p>
-    <ul class="f-links">
-      <li><a href="https://www.facebook.com/librairielespritlarge" target="_blank" rel="noopener">📘 Facebook</a></li>
-      <li><a href="https://www.instagram.com/librairie_lesprit_large/" target="_blank" rel="noopener">📷 Instagram</a></li>
+      <li>Commande &amp; réservation</li>
+      <li>Carte cadeau</li>
+      <li>🥪 Casse-croûte Littéraire</li>
+      <li>🚲 Livraison locale</li>
+      <li>Mentions légales</li>
     </ul>
   </div>
 </footer>
 <div class="site-footer-bottom">© 2026 L'Esprit Large · Librairie indépendante depuis 2006</div>
+  <div class="coups-pagination" id="coups-pagination"></div>
+</div>
 
+
+
+
+
+<script>
+var tousLesCoups = [];
+var filtreActif = 'tous';
+var EMOJI = { Roman: '&#x1F4D6;', BD: '&#x1F3A8;', Jeunesse: '&#x1F31F;', Essai: '&#x1F4A1;' };
+var pageCourante = 1;
+var PER_PAGE = 20;
+
+function filtrer(cat, btn) {
+  filtreActif = cat;
+  pageCourante = 1;
+  document.querySelectorAll('.filtre-btn').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  renderCoups();
+}
+
+function renderCoups() {
+  var grid    = document.getElementById('coups-grid');
+  var countEl = document.getElementById('coups-count');
+  var tous = filtreActif === 'tous'
+    ? tousLesCoups
+    : tousLesCoups.filter(function(x) { return x.categorie === filtreActif; });
+  var epingles = tous.filter(function(x){ return x.epingle; });
+  var autres   = tous.filter(function(x){ return !x.epingle; });
+  var ordonnes = epingles.concat(autres);
+  var total    = ordonnes.length;
+  var totalPages = Math.ceil(total / PER_PAGE);
+  countEl.textContent = total + ' coup' + (total > 1 ? 's' : '') + ' de coeur'
+    + (epingles.length > 0 ? ' · ' + epingles.length + ' mis en avant' : '');
+  if (!total) {
+    grid.innerHTML = '<div class="coups-vide">Aucun coup de coeur dans cette catégorie.</div>';
+    renderPagination(0);
+    return;
+  }
+  if (pageCourante > totalPages) pageCourante = 1;
+  var debut   = (pageCourante - 1) * PER_PAGE;
+  var tranche = ordonnes.slice(debut, debut + PER_PAGE);
+  var frag = document.createDocumentFragment();
+  tranche.forEach(function(item) { frag.appendChild(buildCard(item)); });
+  grid.innerHTML = '';
+  grid.appendChild(frag);
+  renderPagination(totalPages);
+}
+
+function buildCard(item) {
+  var card = document.createElement('div');
+  card.className = 'coup-card';
+  var wrap = document.createElement('div');
+  wrap.className = 'coup-cover-wrap';
+  if (item.couverture) {
+    var img = document.createElement('img');
+    img.className = 'coup-cover';
+    img.src = item.couverture;
+    img.alt = item.titre || '';
+    img.loading = 'lazy';
+    img.onerror = function() {
+      var ph = document.createElement('div');
+      ph.className = 'coup-cover-ph';
+      ph.innerHTML = EMOJI[item.categorie] || '&#x1F4D6;';
+      this.parentNode.replaceChild(ph, this);
+    };
+    wrap.appendChild(img);
+  } else {
+    var ph = document.createElement('div');
+    ph.className = 'coup-cover-ph';
+    ph.innerHTML = EMOJI[item.categorie] || '&#x1F4D6;';
+    wrap.appendChild(ph);
+  }
+  if (item.categorie) {
+    var badge = document.createElement('div');
+    badge.className = 'coup-cat-badge';
+    badge.textContent = item.categorie;
+    wrap.appendChild(badge);
+  }
+  if (item.epingle) {
+    var pin = document.createElement('div');
+    pin.style.cssText = 'position:absolute;top:.6rem;right:.6rem;font-size:.75rem;background:var(--wood);color:#fff;border-radius:3px;padding:.1rem .35rem;line-height:1;';
+    pin.textContent = '📌';
+    wrap.appendChild(pin);
+  }
+  card.appendChild(wrap);
+  var body = document.createElement('div');
+  body.className = 'coup-body';
+  var titre = document.createElement('div');
+  titre.className = 'coup-titre';
+  titre.textContent = item.titre || '(Sans titre)';
+  body.appendChild(titre);
+  if (item.auteur) {
+    var auteur = document.createElement('div');
+    auteur.className = 'coup-auteur';
+    auteur.textContent = item.auteur;
+    body.appendChild(auteur);
+  }
+  if (item.citation) {
+    var cit = document.createElement('div');
+    cit.className = 'coup-citation';
+    cit.textContent = item.citation;
+    body.appendChild(cit);
+  }
+  if (item.libraire) {
+    var lib = document.createElement('div');
+    lib.className = 'coup-libraire';
+    lib.textContent = '— ' + item.libraire;
+    body.appendChild(lib);
+  }
+  card.appendChild(body);
+  return card;
+}
+
+function renderPagination(totalPages) {
+  var wrap = document.getElementById('coups-pagination');
+  if (!wrap) return;
+  if (totalPages <= 1) { wrap.innerHTML = ''; return; }
+  var p = pageCourante;
+  var html = '<button class="page-btn" onclick="goPage(' + (p-1) + ')"' + (p===1?' disabled':'') + '>&#8249;</button>';
+  for (var i = 1; i <= totalPages; i++) {
+    if (i===1 || i===totalPages || Math.abs(i-p)<=1) {
+      html += '<button class="page-btn' + (i===p?' active':'') + '" onclick="goPage('+i+')">' + i + '</button>';
+    } else if (Math.abs(i-p)===2) {
+      html += '<span style="padding:0 .3rem;color:var(--ink-soft);">&#8230;</span>';
+    }
+  }
+  html += '<button class="page-btn" onclick="goPage(' + (p+1) + ')"' + (p===totalPages?' disabled':'') + '>&#8250;</button>';
+  wrap.innerHTML = html;
+}
+
+function goPage(p) {
+  pageCourante = p;
+  renderCoups();
+  window.scrollTo({ top: document.getElementById('coups-grid').offsetTop - 80, behavior: 'smooth' });
+}
+
+async function charger() {
+  try {
+    var r = await fetch('https://raw.githubusercontent.com/lespritlarge/lespritlarge.github.io/main/coups.json?t=' + Date.now());
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    var data = await r.json();
+    var tous = data.coups || [];
+    var ep = tous.filter(function(x){ return x.epingle; });
+    tousLesCoups = ep.concat(tous.filter(function(x){ return !x.epingle; }));
+    renderCoups();
+  } catch(e) {
+    document.getElementById('coups-grid').innerHTML = '<div class="coups-vide">Impossible de charger les coups de cœur.</div>';
+  }
+}
+charger();
+</script>
 </body>
 </html>
